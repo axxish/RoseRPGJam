@@ -20,7 +20,7 @@ endif()
 set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
 
-add_executable(RoseRPG main.cpp Graphics/GameWindow.cpp Graphics/SpriteSheet.cpp World/Level.cpp World/TileSet.cpp Application.cpp )
+add_executable(RoseRPG main.cpp Graphics/GameWindow.cpp Graphics/SpriteSheet.cpp World/Tilemap.cpp World/TileSet.cpp Application.cpp )
 
 target_link_libraries(RoseRPG 
     raylib

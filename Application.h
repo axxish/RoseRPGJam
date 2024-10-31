@@ -1,7 +1,7 @@
 #pragma once
 #include "Graphics/GameWindow.h"
 #include "World/TileSet.h"
-#include "World/Level.h"
+#include "World/Tilemap.h"
 #include <stdint.h>
 
 
@@ -26,7 +26,7 @@ class Application
 
   private:
     void Loop();
-    Level p_currentLevel;
+    Tilemap p_currentLevel;
     AppConfig p_appConfig;
     GameWindow p_gameWindow;
     TileSet p_worldTileSet;

@@ -1,5 +1,5 @@
 #include "Application.h"
-#include "World/Level.h"
+#include "World/Tilemap.h"
 #include <iostream>
 
 Application::Application(const AppConfig &config)
@@ -34,7 +34,7 @@ void Application::Run()
     p_entSpriteSheet = SpriteSheet("resources/creatures.png", p_appConfig.tileSize);
     p_entSpriteSheet.AddSprite("hero", {0, 0, 1, 1});
 
-    p_currentLevel = Level(16, 12);
+    p_currentLevel = Tilemap(16, 12);
     p_currentLevel.tiles = testWorld;
 
     p_camera = {{(float)(p_gameWindow.GetWidthInPixels() / 2), (float)(p_gameWindow.GetHeightInPixels() / 2)},
@@ -51,7 +51,7 @@ void Application::Run()
     CloseWindow();
 }
 
-void drawLevel(Level &level, GameWindow &renderer, TileSet &tileset)
+void drawLevel(Tilemap &level, GameWindow &renderer, TileSet &tileset)
 {
     std::vector<TileType> types = tileset.getTileTypes();
     std::vector<uint16_t> tiles = level.tiles;

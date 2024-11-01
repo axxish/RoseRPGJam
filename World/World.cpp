@@ -76,7 +76,11 @@ void World::OnRender(GameWindow& renderer){
 
 }
 
+
+
 void World::OnUpdate(){
+
+    /*
     if(IsKeyPressed(KEY_W)){
         Entities[0].Move(0, -1);
         Camera.target = {(float)Entities[0].X * 16, (float)Entities[0].Y * 16};
@@ -95,4 +99,5 @@ void World::OnUpdate(){
         Entities[0].Move(1, 0);
         Camera.target = {(float)Entities[0].X * 16, (float)Entities[0].Y * 16};
     }
+    */
 }

@@ -2,6 +2,7 @@
 #include "Graphics/GameWindow.h"
 #include "World/TileSet.h"
 #include "World/Tilemap.h"
+#include "World/World.h"
 #include <stdint.h>
 
 
@@ -26,19 +27,11 @@ class Application
 
   private:
     void Loop();
-    Tilemap p_currentLevel;
     AppConfig p_appConfig;
     GameWindow p_gameWindow;
-    TileSet p_worldTileSet;
-    SpriteSheet p_entSpriteSheet;
-    Camera2D p_camera;
 
-    std::vector<uint16_t> testWorld = {
-        2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        2, 2, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 2, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    };
+    
+
+    World p_world;
+    
 };

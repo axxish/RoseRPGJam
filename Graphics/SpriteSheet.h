@@ -9,9 +9,7 @@ struct Sprite{
 
 class SpriteSheet{
     public:
-    SpriteSheet(){
-        
-    }
+
     
     SpriteSheet(const std::string& texturePath, uint16_t tileSize);
 

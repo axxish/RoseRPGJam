@@ -2,6 +2,7 @@
 
 SpriteSheet::SpriteSheet(const std::string& texturePath, uint16_t tileSize) {
     p_Texture = LoadTexture(texturePath.c_str());
+    
     p_tileSize = tileSize;
 }
 

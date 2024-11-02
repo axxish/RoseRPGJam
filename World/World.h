@@ -41,11 +41,13 @@ class World
 
 		bool GetIsItPlayerMove();
 
+
     std::vector<Entity*	> Entities;
 
     Camera2D Camera;
 
-		
+    bool isDragging = false;
+    Vector2 pivotCamera;
 
   private:
     uint16_t p_width;

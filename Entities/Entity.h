@@ -21,10 +21,14 @@ struct Entity
 
     std::string Name;
     std::string SpriteName;
+
+    bool isMob = true;
+
     int Hp;
 
     int X;
     int Y;
+
     World *WorldRef;
 };
 

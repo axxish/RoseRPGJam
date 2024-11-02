@@ -63,26 +63,26 @@ bool Player::DoTurn()
     if (IsKeyPressed(KEY_W))
     {
         Move(0, -1);
-        WorldRef->Camera.target = {(float)X * 16, (float)Y * 16};
+        WorldRef->Camera.target = {(float)X * 16 * 3 , (float)Y * 16 * 3};
         return true;
     }
     if (IsKeyPressed(KEY_S))
     {
         Move(0, 1);
-        Camera->target = {(float)X * 16, (float)Y * 16};
+        Camera->target = {(float)X * 16 * 3, (float)Y * 16 * 3};
         return true;
     }
 
     if (IsKeyPressed(KEY_A))
     {
         Move(-1, 0);
-        Camera->target = {(float)X * 16, (float)Y * 16};
+        Camera->target = {(float)X * 16 * 3, (float)Y * 16 * 3};
         return true;
     }
     if (IsKeyPressed(KEY_D))
     {
         Move(1, 0);
-        Camera->target = {(float)X * 16, (float)Y * 16};
+        Camera->target = {(float)X * 16 * 3, (float)Y * 16 * 3};
         return true;
     }
 

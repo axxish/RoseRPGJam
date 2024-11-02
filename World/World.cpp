@@ -69,6 +69,9 @@ void World::DrawEntities(GameWindow &renderer)
     for (Entity *i : Entities)
     {
         renderer.DrawSprite(*p_entSpriteSheet, i->SpriteName, i->X, i->Y);
+        if(i->isMob){
+            DrawText(std::to_string(i->Hp).c_str(), i->X * 16 * 3, i->Y * 16 * 3, 12, RED);
+        }
     }
 }
 
@@ -99,6 +102,34 @@ void World::OnRender(GameWindow &renderer)
 
 void World::OnUpdate(float deltaTime)
 {
+
+    if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE))
+    {
+        if (!isDragging)
+        {
+            pivotCamera = GetMousePosition();
+            isDragging = true;
+        }
+
+        if (isDragging)
+        {
+            auto newX = pivotCamera.x - GetMousePosition().x;
+            auto newY = pivotCamera.y - GetMousePosition().y;
+            newX = newX ;
+            newY = newY ;
+            Camera.target.x += newX;
+            Camera.target.y += newY;
+            pivotCamera = GetMousePosition();
+        }
+        // auto delta = GetMouseDelta();
+        // p_camera.target.x -= delta.x;
+        // p_camera.target.y -= delta.y;
+    }else{
+        isDragging = false;
+    }
+
+    
+
     for (Entity *e : Entities)
     {
         e->OnUpdate(deltaTime);
@@ -116,9 +147,10 @@ void World::OnUpdate(float deltaTime)
     }
 }
 
-
-bool World::GetIsItPlayerMove(){
-    if(p_currentEntityIndex == 0){
+bool World::GetIsItPlayerMove()
+{
+    if (p_currentEntityIndex == 0)
+    {
         return true;
     }
     return false;

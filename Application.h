@@ -27,6 +27,7 @@ class Application
 
   private:
     void Loop();
+    
     AppConfig p_appConfig;
     GameWindow p_gameWindow;
 

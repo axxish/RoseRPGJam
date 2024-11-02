@@ -43,7 +43,7 @@ struct Rat : public Entity
     {
     }
 
-    float moveDelay = 0.1;     // The delay in seconds between AI moves
+    float moveDelay = 0.2;     // The delay in seconds between AI moves
     float timeSinceLastMove = 0; // Accumulated time since the last move
     bool rWeCountingTime = false;
 

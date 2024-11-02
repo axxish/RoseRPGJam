@@ -22,7 +22,7 @@ class Application
     ~Application();
     
     void Run();
-    void OnUpdate();
+    void OnUpdate(float deltaTime);
     void OnRender();
 
   private:
@@ -30,7 +30,7 @@ class Application
     AppConfig p_appConfig;
     GameWindow p_gameWindow;
 
-    
+    SpriteSheet *p_uiSpriteSheet;
 
     World p_world;
     

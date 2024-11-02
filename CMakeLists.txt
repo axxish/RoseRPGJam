@@ -33,3 +33,4 @@ target_include_directories(RoseRPG PUBLIC "${raylib_SOURCE_DIR}/src")
 
 FILE(COPY resources/creatures.png DESTINATION "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/resources")
 FILE(COPY resources/maptiles.png DESTINATION "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/resources")
+FILE(COPY resources/iconsui.png DESTINATION "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/resources")

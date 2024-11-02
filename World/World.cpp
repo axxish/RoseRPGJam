@@ -1,10 +1,11 @@
 #include "World.h"
+#include <iostream>
 
-World::World(){
-
+World::World()
+{
 }
 
-void World::Init(uint16_t tileSize, uint16_t worldWidth, uint16_t worldHeight) 
+void World::Init(uint16_t tileSize, uint16_t worldWidth, uint16_t worldHeight)
 {
 
     p_width = worldWidth;
@@ -16,30 +17,31 @@ void World::Init(uint16_t tileSize, uint16_t worldWidth, uint16_t worldHeight)
     p_worldTileSet.addTileType("wall", {1, 1, 1, 1}, true);
 
     p_entSpriteSheet = new SpriteSheet("resources/creatures.png", tileSize);
-   
+
     p_entSpriteSheet->AddSprite("hero", {0, 0, 1, 1});
     p_entSpriteSheet->AddSprite("rat", {1, 1, 1, 1});
 
     p_currentLevel = Tilemap(worldWidth, worldHeight);
     p_currentLevel.tiles = testWorld;
 
+    Entities.push_back(new Player("player", 100, 1, 1, this));
 
-    Entity player("player", "hero", 100, 1, 1, this);
-    Entities.push_back(player);
+    Entities.push_back(new Rat("Rat", 100, 2, 3, this));
 
-    Entities.push_back(Entity("Rat", "rat", 100, 2, 3, this));
+    Entities.push_back(new Rat("Rat", 100, 3, 4, this));
 
-    
+    Entities.push_back(new Rat("Rat", 100, 3, 5, this));
 }
 
-TileSet* World::GetTileSet(){
+TileSet *World::GetTileSet()
+{
     return &p_worldTileSet;
 }
 
-Tilemap* World::GetTilemap(){
+Tilemap *World::GetTilemap()
+{
     return &p_currentLevel;
 }
-
 
 void World::DrawTilemap(GameWindow &renderer)
 {
@@ -62,42 +64,62 @@ void World::DrawTilemap(GameWindow &renderer)
     }
 }
 
-void World::DrawEntities(GameWindow &renderer){
-    for(Entity i : Entities){
-        renderer.DrawSprite(*p_entSpriteSheet, i.SpriteName, i.X, i.Y);
+void World::DrawEntities(GameWindow &renderer)
+{
+    for (Entity *i : Entities)
+    {
+        renderer.DrawSprite(*p_entSpriteSheet, i->SpriteName, i->X, i->Y);
     }
 }
 
+void World::StartTurn()
+{
+    p_currentEntityIndex = 0;
+}
 
+Entity *World::GetCurrentEntity()
+{
+    if (p_currentEntityIndex < Entities.size())
+        return Entities[p_currentEntityIndex];
+    return nullptr;
+}
 
-void World::OnRender(GameWindow& renderer){
+void World::EndTurn()
+{
+    p_currentEntityIndex++;
+    if (p_currentEntityIndex >= Entities.size())
+        StartTurn(); // Cycle back to the beginning of the turn
+}
+
+void World::OnRender(GameWindow &renderer)
+{
     DrawTilemap(renderer);
     DrawEntities(renderer);
+}
 
+void World::OnUpdate(float deltaTime)
+{
+    for (Entity *e : Entities)
+    {
+        e->OnUpdate(deltaTime);
+    }
+
+    Entity *currentEntity = GetCurrentEntity();
+
+    // std::cout << currentEntity->Name << " ";
+    if (currentEntity)
+    {
+        if (currentEntity->DoTurn())
+        {
+            EndTurn();
+        }
+    }
 }
 
 
-
-void World::OnUpdate(){
-
-    /*
-    if(IsKeyPressed(KEY_W)){
-        Entities[0].Move(0, -1);
-        Camera.target = {(float)Entities[0].X * 16, (float)Entities[0].Y * 16};
-        
+bool World::GetIsItPlayerMove(){
+    if(p_currentEntityIndex == 0){
+        return true;
     }
-    if(IsKeyPressed(KEY_S)){
-        Entities[0].Move(0, 1);
-        Camera.target = {(float)Entities[0].X * 16, (float)Entities[0].Y * 16};
-    }
-
-    if(IsKeyPressed(KEY_A)){
-        Entities[0].Move(-1, 0);
-        Camera.target = {(float)Entities[0].X * 16, (float)Entities[0].Y * 16};
-    }
-    if(IsKeyPressed(KEY_D)){
-        Entities[0].Move(1, 0);
-        Camera.target = {(float)Entities[0].X * 16, (float)Entities[0].Y * 16};
-    }
-    */
+    return false;
 }

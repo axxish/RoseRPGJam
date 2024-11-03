@@ -8,8 +8,10 @@ Entity::Entity(const std::string &name, const std::string &spriteName, int hp, i
     SpriteName = spriteName;
     X = x;
     Y = y;
-    Damage = damage; 
-    Hp = hp;
+    BaseDmg = damage; 
+    BaseHP = hp;
+    CurrentHP = BaseHP;
+    CurrentDmg = BaseDmg;
     WorldRef = worldRef;
 }
 
@@ -64,12 +66,12 @@ void Entity::Move(int x, int y)
 }
 
 void Entity::Attack(Entity* target){
-    target->ReceiveDamage(Damage);
+    target->ReceiveDamage(CurrentDmg);
 }
 
 void Entity::ReceiveDamage(int dmg){
-    Hp-=dmg;
-    if(Hp<=0){
+    CurrentHP-=dmg;
+    if(CurrentHP<=0){
         Die();
     }
 }

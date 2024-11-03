@@ -1,6 +1,7 @@
 
 #pragma once
 #include "../Graphics/SpriteSheet.h"
+#include "../Items/Item.h"
 class World;
 
 struct Entity
@@ -13,6 +14,7 @@ struct Entity
     //returns nullptr is it isnt
     Entity* IsOccupied(int x, int y);
 
+
     void Move(int dx, int dy);
     void AttemptMove(int dx, int dy);
     void Attack(Entity * target);
@@ -23,6 +25,10 @@ struct Entity
     
     }
 
+    void AddItem(const Item& item){
+
+    }
+
     std::string Name;
     std::string SpriteName;
 
@@ -30,11 +36,16 @@ struct Entity
     bool isDead = false;
     bool isSolid = true;
 
-    int Hp;
-    int Damage;
+    int BaseHP;
+    int BaseDmg;
+
+    int CurrentHP;
+    int CurrentDmg;
 
     int X;
     int Y;
+
+    //std::vector<Item> Inventory;
 
     World *WorldRef;
 };

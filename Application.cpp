@@ -28,10 +28,28 @@ void Application::Run()
     InitWindow(p_appConfig.widthInTiles * p_appConfig.tileSize * p_appConfig.scale,
                p_appConfig.heightInTiles * p_appConfig.tileSize * p_appConfig.scale, p_appConfig.name.c_str());
     SetTargetFPS(144);
-    p_world.Init(p_appConfig.tileSize , 8, 8);
+    
 
     p_uiSpriteSheet = new SpriteSheet("resources/iconsui.png", p_appConfig.tileSize);
     p_uiSpriteSheet->AddSprite("random", {4, 1, 1, 1});
+
+
+    p_worldTileSet = TileSet("resources/maptiles.png", p_appConfig.tileSize);
+    p_worldTileSet.addTileType("air", {1, 7, 1, 1}, false);
+    p_worldTileSet.addTileType("floor", {3, 3, 1, 1}, false);
+    p_worldTileSet.addTileType("wall", {1, 1, 1, 1}, true);
+
+    p_entSpriteSheet = new SpriteSheet("resources/creatures.png", p_appConfig.tileSize);
+
+    p_entSpriteSheet->AddSprite("hero", {0, 0, 1, 1});
+    p_entSpriteSheet->AddSprite("rat", {1, 1, 1, 1});
+    p_entSpriteSheet->AddSprite("200", {6, 1, 1, 1});
+
+    p_itemSpriteSheet = new SpriteSheet("resources/items.png", p_appConfig.tileSize);
+
+    p_itemSpriteSheet->AddSprite("sword", {7, 1, 1, 1});
+
+    p_world.Init(8, 8, &p_worldTileSet, p_entSpriteSheet, p_itemSpriteSheet);
 
     p_gameWindow.Init();
 
@@ -52,16 +70,14 @@ void Application::Run()
 
 void Application::OnRender()
 {
-    p_gameWindow.BeginMode();
+    p_gameWindow.BeginMode();   
     BeginMode2D(p_world.Camera);
 
     p_world.OnRender(p_gameWindow);
 
     EndMode2D();
 
-
     //DrawUI
-    
 
     if(p_world.GetIsItPlayerMove() == false){
         p_gameWindow.DrawSprite(*p_uiSpriteSheet, "random", p_appConfig.widthInTiles - 1,  p_appConfig.heightInTiles - 1);

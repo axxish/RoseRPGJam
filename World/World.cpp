@@ -5,22 +5,16 @@ World::World()
 {
 }
 
-void World::Init(uint16_t tileSize, uint16_t worldWidth, uint16_t worldHeight)
+void World::Init(uint16_t worldWidth, uint16_t worldHeight, TileSet *worldTileSet, SpriteSheet *creatureSheet,
+                 SpriteSheet *itemSpriteSheet)
 {
 
     p_width = worldWidth;
     p_height = worldHeight;
 
-    p_worldTileSet = TileSet("resources/maptiles.png", tileSize);
-    p_worldTileSet.addTileType("air", {1, 7, 1, 1}, false);
-    p_worldTileSet.addTileType("floor", {3, 3, 1, 1}, false);
-    p_worldTileSet.addTileType("wall", {1, 1, 1, 1}, true);
-
-    p_entSpriteSheet = new SpriteSheet("resources/creatures.png", tileSize);
-
-    p_entSpriteSheet->AddSprite("hero", {0, 0, 1, 1});
-    p_entSpriteSheet->AddSprite("rat", {1, 1, 1, 1});
-    p_entSpriteSheet->AddSprite("200", {6, 1, 1, 1});
+    p_worldTileSet = worldTileSet;
+    p_entSpriteSheet = creatureSheet;
+    p_itemSpriteSheet = itemSpriteSheet;
 
     p_currentLevel = Tilemap(worldWidth, worldHeight);
     p_currentLevel.tiles = testWorld;
@@ -33,22 +27,19 @@ void World::Init(uint16_t tileSize, uint16_t worldWidth, uint16_t worldHeight)
 
     Entities.push_back(new Rat("Rat", 100, 3, 5, this));
 
-    EventManager::Instance().Subscribe(EventType::PlayerMove, [this](std::shared_ptr<Event>){
-        this->OnMoveCameraToPlayer();
-    });
-
-
-
+    EventManager::Instance().Subscribe(EventType::PlayerMove,
+                                       [this](std::shared_ptr<Event>) { this->OnMoveCameraToPlayer(); });
 }
 
-void World::OnMoveCameraToPlayer(){
-    Camera.target.x = Entities[0]->X*16*3;
-    Camera.target.y = Entities[0]->Y*16*3;
+void World::OnMoveCameraToPlayer()
+{
+    Camera.target.x = Entities[0]->X * 16 * 3;
+    Camera.target.y = Entities[0]->Y * 16 * 3;
 }
 
 TileSet *World::GetTileSet()
 {
-    return &p_worldTileSet;
+    return p_worldTileSet;
 }
 
 Tilemap *World::GetTilemap()
@@ -58,7 +49,7 @@ Tilemap *World::GetTilemap()
 
 void World::DrawTilemap(GameWindow &renderer)
 {
-    std::vector<TileType> types = p_worldTileSet.getTileTypes();
+    std::vector<TileType> types = p_worldTileSet->getTileTypes();
     std::vector<uint16_t> tiles = p_currentLevel.tiles;
 
     int width = p_currentLevel.getWidth();
@@ -73,13 +64,13 @@ void World::DrawTilemap(GameWindow &renderer)
             y++;
             x = 0;
         }
-        renderer.DrawSprite(p_worldTileSet.getSpriteSheet(), types[tiles[i]].getTextureName(), x, y);
+        renderer.DrawSprite(p_worldTileSet->getSpriteSheet(), types[tiles[i]].getTextureName(), x, y);
     }
 }
 
 void World::DrawEntities(GameWindow &renderer)
 {
-    for (int z = 1; z< Entities.size(); z++)
+    for (int z = 1; z < Entities.size(); z++)
     {
         auto i = Entities[z];
         if (i->isDead == true)
@@ -92,13 +83,12 @@ void World::DrawEntities(GameWindow &renderer)
         }
         if (i->isMob)
         {
-            DrawText(std::to_string(i->Hp).c_str(), i->X * 16 * 3, i->Y * 16 * 3, 12, RED);
+            DrawText(std::to_string(i->CurrentHP).c_str(), i->X * 16 * 3, i->Y * 16 * 3, 12, RED);
         }
     }
     auto i = Entities[0];
 
     renderer.DrawSprite(*p_entSpriteSheet, i->SpriteName, i->X, i->Y);
-
 }
 
 void World::StartTurn()

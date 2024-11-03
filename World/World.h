@@ -28,7 +28,7 @@ class World
 
     void EndTurn();
 
-    void Init(uint16_t tileSize, uint16_t worldWidth, uint16_t worldHeight);
+    void Init(uint16_t worldWidth, uint16_t worldHeight, TileSet* worldTileSet, SpriteSheet* creatureSheet, SpriteSheet* itemSpriteSheet);
 
     uint16_t GetWidth()
     {
@@ -56,8 +56,10 @@ class World
     uint16_t p_width;
     uint16_t p_height;
     Tilemap p_currentLevel;
-    TileSet p_worldTileSet;
-    SpriteSheet *p_entSpriteSheet;
+    
+    SpriteSheet* p_entSpriteSheet;
+    TileSet* p_worldTileSet;
+    SpriteSheet *p_itemSpriteSheet;
 
     // this is for the turn managing
     size_t p_currentEntityIndex = 0;

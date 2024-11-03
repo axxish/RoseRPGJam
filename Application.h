@@ -5,7 +5,6 @@
 #include "World/World.h"
 #include <stdint.h>
 
-
 struct AppConfig
 {
     std::string name = "RoseRPG";
@@ -20,19 +19,21 @@ class Application
   public:
     Application(const AppConfig &config = AppConfig());
     ~Application();
-    
+
     void Run();
     void OnUpdate(float deltaTime);
     void OnRender();
 
   private:
     void Loop();
-    
+
     AppConfig p_appConfig;
     GameWindow p_gameWindow;
 
+    TileSet p_worldTileSet;
+    SpriteSheet *p_entSpriteSheet;
     SpriteSheet *p_uiSpriteSheet;
+    SpriteSheet *p_itemSpriteSheet;
 
     World p_world;
-    
 };

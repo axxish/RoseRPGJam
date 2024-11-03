@@ -20,6 +20,7 @@ void World::Init(uint16_t tileSize, uint16_t worldWidth, uint16_t worldHeight)
 
     p_entSpriteSheet->AddSprite("hero", {0, 0, 1, 1});
     p_entSpriteSheet->AddSprite("rat", {1, 1, 1, 1});
+    p_entSpriteSheet->AddSprite("200", {6, 1, 1, 1});
 
     p_currentLevel = Tilemap(worldWidth, worldHeight);
     p_currentLevel.tiles = testWorld;
@@ -31,6 +32,18 @@ void World::Init(uint16_t tileSize, uint16_t worldWidth, uint16_t worldHeight)
     Entities.push_back(new Rat("Rat", 100, 3, 4, this));
 
     Entities.push_back(new Rat("Rat", 100, 3, 5, this));
+
+    EventManager::Instance().Subscribe(EventType::PlayerMove, [this](std::shared_ptr<Event>){
+        this->OnMoveCameraToPlayer();
+    });
+
+
+
+}
+
+void World::OnMoveCameraToPlayer(){
+    Camera.target.x = Entities[0]->X*16*3;
+    Camera.target.y = Entities[0]->Y*16*3;
 }
 
 TileSet *World::GetTileSet()
@@ -66,13 +79,26 @@ void World::DrawTilemap(GameWindow &renderer)
 
 void World::DrawEntities(GameWindow &renderer)
 {
-    for (Entity *i : Entities)
+    for (int z = 1; z< Entities.size(); z++)
     {
-        renderer.DrawSprite(*p_entSpriteSheet, i->SpriteName, i->X, i->Y);
-        if(i->isMob){
+        auto i = Entities[z];
+        if (i->isDead == true)
+        {
+            renderer.DrawSpriteGray(*p_entSpriteSheet, i->SpriteName, i->X, i->Y);
+        }
+        else
+        {
+            renderer.DrawSprite(*p_entSpriteSheet, i->SpriteName, i->X, i->Y);
+        }
+        if (i->isMob)
+        {
             DrawText(std::to_string(i->Hp).c_str(), i->X * 16 * 3, i->Y * 16 * 3, 12, RED);
         }
     }
+    auto i = Entities[0];
+
+    renderer.DrawSprite(*p_entSpriteSheet, i->SpriteName, i->X, i->Y);
+
 }
 
 void World::StartTurn()
@@ -115,8 +141,8 @@ void World::OnUpdate(float deltaTime)
         {
             auto newX = pivotCamera.x - GetMousePosition().x;
             auto newY = pivotCamera.y - GetMousePosition().y;
-            newX = newX ;
-            newY = newY ;
+            newX = newX;
+            newY = newY;
             Camera.target.x += newX;
             Camera.target.y += newY;
             pivotCamera = GetMousePosition();
@@ -124,11 +150,11 @@ void World::OnUpdate(float deltaTime)
         // auto delta = GetMouseDelta();
         // p_camera.target.x -= delta.x;
         // p_camera.target.y -= delta.y;
-    }else{
+    }
+    else
+    {
         isDragging = false;
     }
-
-    
 
     for (Entity *e : Entities)
     {
@@ -140,7 +166,11 @@ void World::OnUpdate(float deltaTime)
     // std::cout << currentEntity->Name << " ";
     if (currentEntity)
     {
-        if (currentEntity->DoTurn())
+        if (currentEntity->isDead == true)
+        {
+            EndTurn();
+        }
+        else if (currentEntity->DoTurn())
         {
             EndTurn();
         }

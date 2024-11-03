@@ -16,7 +16,8 @@ class GameWindow{
 
     void Render(int x, int y, int scale);
     void DrawSprite(const SpriteSheet& sheet, const std::string& name, int x, int y);
-    
+    void DrawSpriteGray(const SpriteSheet& sheet, const std::string& name, int x, int y);
+
     void BeginMode();
     void EndMode();
 

@@ -2,17 +2,19 @@
 #include "../World/World.h"
 #include <iostream>
 #include <random>
-Entity::Entity(const std::string &name, const std::string &spriteName, int hp, int x, int y, World *worldRef)
+Entity::Entity(const std::string &name, const std::string &spriteName, int hp, int damage, int x, int y, World *worldRef)
 {
     Name = name;
     SpriteName = spriteName;
     X = x;
     Y = y;
+    Damage = damage; 
     Hp = hp;
     WorldRef = worldRef;
 }
 
-void Entity::Move(int dx, int dy)
+
+void Entity::AttemptMove(int dx, int dy)
 {
     auto tileset = WorldRef->GetTileSet()->getTileTypes();
     auto tilemap = WorldRef->GetTilemap();
@@ -31,26 +33,65 @@ void Entity::Move(int dx, int dy)
         return;
     }
 
-    if (IsOccupied(newX, newY))
+    Entity *possibleOccupant = IsOccupied(newX, newY);
+    // if there's someone on the tile
+    if (possibleOccupant != nullptr)
     {
+        if(possibleOccupant == this){
+            Move(newX, newY);
+            return;
+        }
+        if(possibleOccupant->isSolid == false){
+            Move(newX, newY);
+        }
+        if (possibleOccupant->isMob == true)
+        {
+            Attack(possibleOccupant);
+            return;
+        }
         return;
     }
 
-    X = newX;
-    Y = newY;
+    Move(newX, newY);
 }
 
-bool Entity::IsOccupied(int x, int y)
+
+void Entity::Move(int x, int y)
 {
 
-    for (const Entity *entity : WorldRef->Entities)
+    X = x;
+    Y = y;
+}
+
+void Entity::Attack(Entity* target){
+    target->ReceiveDamage(Damage);
+}
+
+void Entity::ReceiveDamage(int dmg){
+    Hp-=dmg;
+    if(Hp<=0){
+        Die();
+    }
+}
+
+void Entity::Die(){
+    isMob = false;
+    isDead = true;
+    isSolid = false;
+}
+
+
+Entity *Entity::IsOccupied(int x, int y)
+{
+
+    for (Entity *entity : WorldRef->Entities)
     {
         // std::cout << entity->Name << " " << entity->X << " " << entity->Y << "\n";
 
         if (entity->X == x && entity->Y == y)
-            return true; // Tile is occupied
+            return entity; // Tile is occupied
     }
-    return false;
+    return nullptr;
 }
 
 bool Player::DoTurn()
@@ -59,30 +100,38 @@ bool Player::DoTurn()
 
     std::vector<Entity *> &Entities = WorldRef->Entities;
     Camera2D *Camera = &WorldRef->Camera;
+    auto i = std::make_shared<PlayerMovedEvent>();
 
     if (IsKeyPressed(KEY_W))
     {
-        Move(0, -1);
-        WorldRef->Camera.target = {(float)X * 16 * 3 , (float)Y * 16 * 3};
+        AttemptMove(0, -1);
+        //WorldRef->Camera.target = {(float)X * 16 * 3, (float)Y * 16 * 3};
+        
+        EventManager::Instance().Publish(i);
         return true;
     }
     if (IsKeyPressed(KEY_S))
     {
-        Move(0, 1);
-        Camera->target = {(float)X * 16 * 3, (float)Y * 16 * 3};
+        AttemptMove(0, 1);
+        //Camera->target = {(float)X * 16 * 3, (float)Y * 16 * 3};
+        EventManager::Instance().Publish(i);
+       
         return true;
     }
 
     if (IsKeyPressed(KEY_A))
     {
-        Move(-1, 0);
-        Camera->target = {(float)X * 16 * 3, (float)Y * 16 * 3};
+        AttemptMove(-1, 0);
+        //Camera->target = {(float)X * 16 * 3, (float)Y * 16 * 3};
+        EventManager::Instance().Publish(i);
+        
         return true;
     }
     if (IsKeyPressed(KEY_D))
     {
-        Move(1, 0);
-        Camera->target = {(float)X * 16 * 3, (float)Y * 16 * 3};
+        AttemptMove(1, 0);
+        //Camera->target = {(float)X * 16 * 3, (float)Y * 16 * 3};
+        EventManager::Instance().Publish(i);
         return true;
     }
 
@@ -120,7 +169,7 @@ bool Rat::DoTurn()
             y -= 1;
         }
 
-        Move(x, y);
+        AttemptMove(x, y);
         timeSinceLastMove = 0;
         rWeCountingTime = false;
         return true;

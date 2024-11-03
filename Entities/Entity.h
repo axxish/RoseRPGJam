@@ -5,15 +5,19 @@ class World;
 
 struct Entity
 {
-    Entity(const std::string &name, const std::string &spriteName, int hp, int x, int y, World *worldRef);
+    Entity(const std::string &name, const std::string &spriteName, int hp, int damage, int x, int y, World *worldRef);
     virtual bool DoTurn()
     {
         return false;
     }
-
-    bool IsOccupied(int x, int y);
+    //returns nullptr is it isnt
+    Entity* IsOccupied(int x, int y);
 
     void Move(int dx, int dy);
+    void AttemptMove(int dx, int dy);
+    void Attack(Entity * target);
+    void ReceiveDamage(int dmg);
+    void Die();
 
     virtual void OnUpdate(float deltaTime){
     
@@ -23,8 +27,11 @@ struct Entity
     std::string SpriteName;
 
     bool isMob = true;
+    bool isDead = false;
+    bool isSolid = true;
 
     int Hp;
+    int Damage;
 
     int X;
     int Y;
@@ -34,7 +41,7 @@ struct Entity
 
 struct Player : public Entity
 {
-    Player(const std::string &name, int hp, int x, int y, World *worldRef) : Entity(name, "hero", hp, x, y, worldRef)
+    Player(const std::string &name, int hp, int x, int y, World *worldRef) : Entity(name, "hero", hp, 10 , x, y, worldRef)
     {
     }
 
@@ -43,7 +50,7 @@ struct Player : public Entity
 
 struct Rat : public Entity
 {
-    Rat(const std::string &name, int hp, int x, int y, World *worldRef) : Entity(name, "rat", hp, x, y, worldRef)
+    Rat(const std::string &name, int hp, int x, int y, World *worldRef) : Entity(name, "rat", hp, 10, x, y, worldRef)
     {
     }
 

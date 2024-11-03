@@ -3,6 +3,7 @@
 #include "../Graphics/GameWindow.h"
 #include "Tilemap.h"
 #include "Tileset.h"
+#include "../Events/EventManager.h"
 
 class World
 {
@@ -40,6 +41,8 @@ class World
     }
 
 		bool GetIsItPlayerMove();
+
+    void OnMoveCameraToPlayer();
 
 
     std::vector<Entity*	> Entities;

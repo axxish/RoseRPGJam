@@ -41,6 +41,23 @@ void GameWindow::DrawSprite(const SpriteSheet& sheet, const std::string& name, i
     }
 }
 
+
+void GameWindow::DrawSpriteGray(const SpriteSheet& sheet, const std::string& name, int x, int y){
+    if(p_mode){
+        Sprite SpriteData = *sheet.GetSprite(name);
+        Rectangle SpriteTransform = {
+        (float)(SpriteData.x * sheet.GetTileSize()), 
+        (float)(SpriteData.y * sheet.GetTileSize()), 
+        (float)(SpriteData.width_in_tiles * sheet.GetTileSize()), 
+        (float)(SpriteData.height_in_tiles * sheet.GetTileSize())};
+
+        DrawTexturePro(*sheet.GetTexture(), SpriteTransform, {(float)x * p_tileSize, (float)y * p_tileSize, (float)p_tileSize, (float)p_tileSize}, {0, 0}, 0, GRAY);
+    }
+    else{
+        std::cout <<"Error: you are not in the renderer mode;";
+    }
+}
+
 void GameWindow::BeginMode()
 {
     p_mode = true;

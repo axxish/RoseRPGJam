@@ -6,53 +6,66 @@ class World;
 
 struct Entity
 {
-    Entity(const std::string &name, const std::string &spriteName, int hp, int damage, int x, int y, World *worldRef);
+    Entity(const std::string &name, const std::string &spriteName, int vigour, int wrath, int insight, int x, int y,
+           World *worldRef);
     virtual bool DoTurn()
     {
         return false;
     }
-    //returns nullptr is it isnt
-    Entity* IsOccupied(int x, int y);
+    // returns nullptr is it isnt
+    Entity *IsOccupied(int x, int y);
 
+    void CalculateDerivedStats();
+    void GainXP(int amount);
+    void LvlUp();
 
+    int GetXPForNextLevel() const;
     void Move(int dx, int dy);
     void AttemptMove(int dx, int dy);
-    void Attack(Entity * target);
+    void Attack(Entity *target);
     void ReceiveDamage(int dmg);
     void Die();
 
-    virtual void OnUpdate(float deltaTime){
-    
+    virtual void OnUpdate(float deltaTime)
+    {
     }
 
-    void AddItem(const Item& item){
+    /*void AddItem(const Item& item){
 
-    }
+    }*/
 
     std::string Name;
     std::string SpriteName;
+
+    int Lvl;
+    int Xp;
+
+    // attributes everything else scales off
+    int Vigour;  // hp
+    int Wrath;   // dmg
+    int Insight; // mana and spell dmg
+
+    int MaxHP;
+    int CurrentHP;
+    int Damage;
+    int MaxMana;
+    int CurrentMana;
+
+    int X;
+    int Y;
 
     bool isMob = true;
     bool isDead = false;
     bool isSolid = true;
 
-    int BaseHP;
-    int BaseDmg;
-
-    int CurrentHP;
-    int CurrentDmg;
-
-    int X;
-    int Y;
-
-    //std::vector<Item> Inventory;
+    // std::vector<Item> Inventory;
 
     World *WorldRef;
 };
 
 struct Player : public Entity
 {
-    Player(const std::string &name, int hp, int x, int y, World *worldRef) : Entity(name, "hero", hp, 10 , x, y, worldRef)
+    Player(const std::string &name, int x, int y, World *worldRef) : Entity(name, "hero", 10, 5, 3, x, y, worldRef)
     {
     }
 
@@ -61,11 +74,11 @@ struct Player : public Entity
 
 struct Rat : public Entity
 {
-    Rat(const std::string &name, int hp, int x, int y, World *worldRef) : Entity(name, "rat", hp, 10, x, y, worldRef)
+    Rat(const std::string &name, int x, int y, World *worldRef) : Entity(name, "rat", 2, 5, 1, x, y, worldRef)
     {
     }
 
-    float moveDelay = 0.2;     // The delay in seconds between AI moves
+    float moveDelay = 0.2;       // The delay in seconds between AI moves
     float timeSinceLastMove = 0; // Accumulated time since the last move
     bool rWeCountingTime = false;
 

@@ -19,13 +19,13 @@ void World::Init(uint16_t worldWidth, uint16_t worldHeight, TileSet *worldTileSe
     p_currentLevel = Tilemap(worldWidth, worldHeight);
     p_currentLevel.tiles = testWorld;
 
-    Entities.push_back(new Player("player", 100, 1, 1, this));
+    Entities.push_back(new Player("player", 1, 1, this));
 
-    Entities.push_back(new Rat("Rat", 100, 2, 3, this));
+    Entities.push_back(new Rat("Rat", 2, 3, this));
 
-    Entities.push_back(new Rat("Rat", 100, 3, 4, this));
+    Entities.push_back(new Rat("Rat", 3, 4, this));
 
-    Entities.push_back(new Rat("Rat", 100, 3, 5, this));
+    Entities.push_back(new Rat("Rat", 3, 5, this));
 
     EventManager::Instance().Subscribe(EventType::PlayerMove,
                                        [this](std::shared_ptr<Event>) { this->OnMoveCameraToPlayer(); });

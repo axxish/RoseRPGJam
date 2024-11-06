@@ -49,7 +49,7 @@ void Application::Run()
 
     p_itemSpriteSheet->AddSprite("sword", {1, 7, 1, 1});
 
-    p_world.Init(8, 8, &p_worldTileSet, p_entSpriteSheet, p_itemSpriteSheet);
+    p_world.Init(20, 20, &p_worldTileSet, p_entSpriteSheet, p_itemSpriteSheet);
 
     currentItemInv = 0;
 

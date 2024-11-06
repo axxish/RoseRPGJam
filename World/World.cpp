@@ -1,4 +1,5 @@
 #include "World.h"
+#include "DungeonGenerator.h"
 #include <iostream>
 
 World::World()
@@ -11,26 +12,28 @@ void World::Init(uint16_t worldWidth, uint16_t worldHeight, TileSet *worldTileSe
 
     p_width = worldWidth;
     p_height = worldHeight;
-
+    depth = 0;
     p_worldTileSet = worldTileSet;
     p_entSpriteSheet = creatureSheet;
     p_itemSpriteSheet = itemSpriteSheet;
 
-    p_currentLevel = Tilemap(worldWidth, worldHeight);
-    p_currentLevel.tiles = testWorld;
+    // p_currentLevel = Tilemap(worldWidth, worldHeight);
+    // p_currentLevel.tiles = testWorld;
 
-    Entities.push_back(new Player("player", 1, 1, this));
+    // GenerateDungeonLayout(20, 20);
 
-    Entities[0]->AddItem(Item("Basic sword", "sword", 1, 2, 0));
+    gen1 = new DungeonGenerator(worldHeight, worldWidth);
+    gen1->Generate(5, 4, 8);
+    std::pair<int, int> rand;
 
-    Entities.push_back(new Rat("Rat", 2, 3, this));
+    p_currentLevel = gen1->GetDungeonLayout();
+    rand = gen1->GetRandomFloorTile();
 
-    Entities.push_back(new Rat("Rat", 3, 4, this));
-
-    Entities.push_back(new Rat("Rat", 3, 5, this));
-
+    Entities.push_back(new Player("player", rand.first, rand.second, this));
     EventManager::Instance().Subscribe(EventType::PlayerMove,
                                        [this](std::shared_ptr<Event>) { this->OnMoveCameraToPlayer(); });
+    Camera.target.x = Entities[0]->X * 16 * 3;
+    Camera.target.y = Entities[0]->Y * 16 * 3;
 }
 
 void World::OnMoveCameraToPlayer()
@@ -39,8 +42,9 @@ void World::OnMoveCameraToPlayer()
     Camera.target.y = Entities[0]->Y * 16 * 3;
 }
 
-void World::AddLootDrop(Item item,int x, int y){
-    
+void World::AddLootDrop(Item item, int x, int y)
+{
+
     Drops.push_back(LootDrop(item, x, y));
 }
 
@@ -75,7 +79,7 @@ void World::DrawTilemap(GameWindow &renderer)
     }
 }
 
-void World::DrawEntities(GameWindow &renderer)
+void World::DrawDeadEntities(GameWindow &renderer)
 {
     for (int z = 1; z < Entities.size(); z++)
     {
@@ -84,11 +88,23 @@ void World::DrawEntities(GameWindow &renderer)
         {
             renderer.DrawSpriteGray(*p_entSpriteSheet, i->SpriteName, i->X, i->Y);
         }
+    }
+}
+
+void World::DrawAliveEntities(GameWindow &renderer)
+{
+    for (int z = 1; z < Entities.size(); z++)
+    {
+        auto i = Entities[z];
+        if (i->isDead == true)
+        {
+            // renderer.DrawSpriteGray(*p_entSpriteSheet, i->SpriteName, i->X, i->Y);
+        }
         else
         {
             renderer.DrawSprite(*p_entSpriteSheet, i->SpriteName, i->X, i->Y);
         }
-        }
+    }
 
     auto player = Entities[0];
 
@@ -104,8 +120,8 @@ void World::DrawEntities(GameWindow &renderer)
             int greenBarWidth = static_cast<int>(healthPercentage * (11));
             DrawRectangle((i->X * 16 * 3) + 8, (i->Y * 16 * 3) - 4, 11 * 3, 2, RED);
             DrawRectangle((i->X * 16 * 3) + 8, (i->Y * 16 * 3) - 4, greenBarWidth * 3, 2, GREEN);
-            DrawText(std::to_string(i->Lvl).c_str(), (i->X * 16 * 3), (i->Y * 16 * 3) - 8, 12, YELLOW );
-            DrawText(i->Name.c_str(), (i->X * 16 * 3) + 4, (i->Y * 16 * 3) - 16, 12, YELLOW );
+            DrawText(std::to_string(i->Lvl).c_str(), (i->X * 16 * 3), (i->Y * 16 * 3) - 8, 12, YELLOW);
+            DrawText(i->Name.c_str(), (i->X * 16 * 3) + 4, (i->Y * 16 * 3) - 16, 12, YELLOW);
         }
     }
 }
@@ -131,13 +147,14 @@ void World::EndTurn()
 
 void World::OnRender(GameWindow &renderer)
 {
-    
 
     DrawTilemap(renderer);
-    for(auto drop : Drops){
-        renderer.DrawSprite(*p_itemSpriteSheet,drop.item.SpriteName, drop.X, drop.Y);
+    DrawDeadEntities(renderer);
+    for (auto drop : Drops)
+    {
+        renderer.DrawSprite(*p_itemSpriteSheet, drop.item.SpriteName, drop.X, drop.Y);
     }
-    DrawEntities(renderer);
+    DrawAliveEntities(renderer);
 }
 
 void World::OnUpdate(float deltaTime)

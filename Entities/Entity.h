@@ -6,7 +6,6 @@ class World;
 
 struct Entity
 {
-    
 
     Entity(const std::string &name, const std::string &spriteName, int vigour, int wrath, int insight, int x, int y,
            World *worldRef);
@@ -14,6 +13,8 @@ struct Entity
     {
         return false;
     }
+    virtual void OnUpdate(float deltaTime);
+
     // returns nullptr is it isnt
     Entity *IsOccupied(int x, int y);
 
@@ -27,10 +28,6 @@ struct Entity
     void Attack(Entity *target);
     void ReceiveDamage(int dmg);
     void Die();
-
-    virtual void OnUpdate(float deltaTime)
-    {
-    }
 
     bool AddItem(const Item &item);
     void RemoveItem(int num);
@@ -69,6 +66,10 @@ struct Entity
 
     bool turnSkip = false;
 
+    float moveDelay = 0.2;       // The delay in seconds between AI moves
+    float timeSinceLastMove = 0; // Accumulated time since the last move
+    bool rWeCountingTime = false;
+
     // std::vector<Item> Inventory;
 
     World *WorldRef;
@@ -78,27 +79,20 @@ struct Player : public Entity
 {
     Player(const std::string &name, int x, int y, World *worldRef) : Entity(name, "hero", 4, 5, 3, x, y, worldRef)
     {
-        
     }
 
     bool DoTurn() override;
-};
-
-struct Rat : public Entity
-{
-    Rat(const std::string &name, int x, int y, World *worldRef) : Entity(name, "rat", 2, 5, 1, x, y, worldRef)
-    {
-        XpBounty = 30;
-    }
-
-    float moveDelay = 0.2;       // The delay in seconds between AI moves
-    float timeSinceLastMove = 0; // Accumulated time since the last move
-    bool rWeCountingTime = false;
 
     void OnUpdate(float deltaTime) override;
-
-    bool DoTurn() override;
 };
+
+struct Door : public Entity
+{
+    Door(int x, int y, World *worldRef) : Entity("Door", "door", 4, 5, 3, x, y, worldRef)
+    {
+    }
+};
+
 /*
 struct Mob : public Entity
 {

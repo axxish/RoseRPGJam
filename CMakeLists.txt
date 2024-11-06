@@ -23,11 +23,13 @@ set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_executable(RoseRPG 
                     main.cpp Application.cpp
                     Graphics/GameWindow.cpp Graphics/SpriteSheet.cpp 
-                    World/Tilemap.cpp World/TileSet.cpp World/World.cpp Entities/Entity.cpp Events/EventManager.cpp)
+                    World/Tilemap.cpp World/TileSet.cpp World/World.cpp Entities/Entity.cpp Entities/Rat.cpp Events/EventManager.cpp )
 
 target_link_libraries(RoseRPG 
     raylib
 )
+
+set_property(TARGET RoseRPG PROPERTY CXX_STANDARD 17)
 
 target_include_directories(RoseRPG PUBLIC "${raylib_SOURCE_DIR}/src")
 

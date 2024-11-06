@@ -19,6 +19,14 @@ Entity::Entity(const std::string &name, const std::string &spriteName, int vigou
     CurrentMana = MaxMana;
 }
 
+void Entity::OnUpdate(float deltaTime)
+{
+    if (rWeCountingTime)
+    {
+        timeSinceLastMove += deltaTime;
+    }
+}
+
 bool Entity::AddItem(const Item &item)
 {
 
@@ -40,6 +48,7 @@ bool Entity::AddItem(const Item &item)
 
 void Entity::RemoveItem(int num)
 {
+    
     auto item = Inventory[num];
     Vigour -= item.Vigour;
     Wrath -= item.Wrath;
@@ -51,7 +60,8 @@ void Entity::RemoveItem(int num)
 
 void Entity::DropItem(int num)
 {
-    WorldRef->AddLootDrop(Inventory.at(num), X, Y);
+    if(num >= Inventory.size() ) return;
+    WorldRef->AddLootDrop(Inventory.at(num), X, Y); 
     RemoveItem(num);
     turnSkip = true;
 }
@@ -185,6 +195,7 @@ void Entity::Die()
     isMob = false;
     isDead = true;
     isSolid = false;
+    DropItem(0);
 }
 
 bool Player::DoTurn()
@@ -259,43 +270,6 @@ bool Player::DoTurn()
     // Handle player input or turn-based actions here
 }
 
-void Rat::OnUpdate(float deltaTime)
-{
-    if (rWeCountingTime)
-    {
-        timeSinceLastMove += deltaTime;
-    }
-}
-
-bool Rat::DoTurn()
-{
-    if (!rWeCountingTime)
-    {
-        rWeCountingTime = true;
-    }
-    if (timeSinceLastMove > moveDelay)
-    {
-        int x = 0;
-        int y = 0;
-
-        if (rand() % 2)
-        {
-            x = rand() % 3;
-            x -= 1;
-        }
-        else
-        {
-            y = rand() % 3;
-            y -= 1;
-        }
-
-        AttemptMove(x, y);
-        timeSinceLastMove = 0;
-        rWeCountingTime = false;
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+void Player::OnUpdate(float deltaTime){
+    //do nuthin
 }

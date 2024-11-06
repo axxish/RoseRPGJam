@@ -4,8 +4,14 @@
 RoseRPG is a procedurally generated RPG roguelike game with permadeath made using C++ and raylib.
 
 W A S D to walk
+
+
 I to open inventory
+
+
 E to equip item
+
+
 
 ## Building
 You can build using usual cmake procedure.

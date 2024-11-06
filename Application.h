@@ -24,8 +24,12 @@ class Application
     void OnUpdate(float deltaTime);
     void OnRender();
 
+    void DrawInGameUI();
+
   private:
     void Loop();
+
+    bool worldRunning = true;
 
     AppConfig p_appConfig;
     GameWindow p_gameWindow;

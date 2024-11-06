@@ -5,10 +5,12 @@
 struct Item{
     std::string Name;
     std::string SpriteName;
-    int hp;
-    int dmg;
+    float Vigour;
+    float Wrath;
+    float Insight;
 
-    Item(const std::string& name, const std::string& spriteName, int hp, int dmg) : Name(name), SpriteName(name) {
+    Item(const std::string& name, const std::string& spriteName, float vigour, float wrath, float insight) : 
+    Name(name), SpriteName(spriteName), Vigour(vigour), Wrath(wrath), Insight(insight) {
 
     }
 };

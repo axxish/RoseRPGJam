@@ -6,6 +6,8 @@ class World;
 
 struct Entity
 {
+    
+
     Entity(const std::string &name, const std::string &spriteName, int vigour, int wrath, int insight, int x, int y,
            World *worldRef);
     virtual bool DoTurn()
@@ -30,6 +32,8 @@ struct Entity
     {
     }
 
+    bool AddItem(const Item &item);
+    void RemoveItem(int num);
     /*void AddItem(const Item& item){
 
     }*/
@@ -37,8 +41,12 @@ struct Entity
     std::string Name;
     std::string SpriteName;
 
+    std::vector<Item> Inventory;
+    const static int inv_size = 4;
+
     int Lvl;
-    int Xp;
+    int XP;
+    int XpBounty;
 
     // attributes everything else scales off
     int Vigour;  // hp
@@ -65,8 +73,9 @@ struct Entity
 
 struct Player : public Entity
 {
-    Player(const std::string &name, int x, int y, World *worldRef) : Entity(name, "hero", 10, 5, 3, x, y, worldRef)
+    Player(const std::string &name, int x, int y, World *worldRef) : Entity(name, "hero", 4, 5, 3, x, y, worldRef)
     {
+        
     }
 
     bool DoTurn() override;
@@ -76,6 +85,7 @@ struct Rat : public Entity
 {
     Rat(const std::string &name, int x, int y, World *worldRef) : Entity(name, "rat", 2, 5, 1, x, y, worldRef)
     {
+        XpBounty = 30;
     }
 
     float moveDelay = 0.2;       // The delay in seconds between AI moves

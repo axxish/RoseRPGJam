@@ -2,31 +2,72 @@
 #include "../World/World.h"
 #include <iostream>
 #include <random>
+#include <algorithm>
 Entity::Entity(const std::string &name, const std::string &spriteName, int vigour, int wrath, int insight, int x, int y,
                World *worldRef)
     : Vigour(vigour), Wrath(wrath), Insight(insight)
 {
+    Inventory.reserve(4);
     Name = name;
     SpriteName = spriteName;
     X = x;
     Y = y;
     WorldRef = worldRef;
+    Lvl = 1;
     CalculateDerivedStats();
     CurrentHP = MaxHP;
+    CurrentMana = MaxMana;
+}
+
+bool Entity::AddItem(const Item &item)
+{
+
+    if (Inventory.size() < inv_size)
+    {
+        Inventory.push_back(item);
+
+        // Apply item's primary attribute bonuses
+        Vigour += item.Vigour;
+        Wrath += item.Wrath;
+        Insight += item.Insight;
+
+        // Recalculate derived stats based on updated primary attributes
+        CalculateDerivedStats();
+        return true;
+    }
+    return false;
+}
+
+void Entity::RemoveItem(int num)
+{
+    auto item = Inventory[num];
+    Vigour -= item.Vigour;
+    Wrath -= item.Wrath;
+    Insight -= item.Insight;
+    CalculateDerivedStats();
+
+    Inventory.erase(Inventory.begin() + num);
 }
 
 void Entity::CalculateDerivedStats()
 {
+
+    int oldMaxHP = MaxHP;
+    int oldMaxMana = MaxMana;
     MaxHP = Vigour * 10;
-    
+
     Damage = Wrath * 2;
     MaxMana = Insight * 5;
+
+     // Adjust current health/mana proportionally to the new max values
+    CurrentHP = std::min(MaxHP, CurrentHP * MaxHP / oldMaxHP);
+    CurrentMana = std::min(MaxMana, CurrentMana * MaxMana / oldMaxMana);
 }
 
 void Entity::GainXP(int amount)
 {
-    Xp += amount;
-    while (Xp >= GetXPForNextLevel())
+    XP += amount;
+    while (XP >= GetXPForNextLevel())
     {
         LvlUp();
     }
@@ -34,17 +75,14 @@ void Entity::GainXP(int amount)
 
 void Entity::LvlUp()
 {
-    int oldMaxHP = MaxHP;
-
+    
     Lvl++;
     Vigour++; // Example level-up bonuses
     Wrath++;
     Insight++;
     CalculateDerivedStats(); // Recalculate derived stats after leveling up
 
-    // Adjust current health/mana proportionally to the new max values
-    CurrentHP = std::min(MaxHP, CurrentHP * MaxHP / oldMaxHP);
-    CurrentMana = std::min(MaxMana, CurrentMana * MaxMana / (MaxMana - Insight * 5));
+   
 }
 
 int Entity::GetXPForNextLevel() const
@@ -74,7 +112,15 @@ void Entity::Move(int x, int y)
 
 void Entity::Attack(Entity *target)
 {
-    target->ReceiveDamage(Damage);
+    if (target->isDead == false)
+    {
+        target->ReceiveDamage(Damage);
+        if (target->isDead)
+        {
+            this->GainXP(target->XpBounty);
+            this->XpBounty += target->XpBounty;
+        }
+    }
 }
 
 void Entity::ReceiveDamage(int dmg)

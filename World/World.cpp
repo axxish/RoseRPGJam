@@ -21,6 +21,8 @@ void World::Init(uint16_t worldWidth, uint16_t worldHeight, TileSet *worldTileSe
 
     Entities.push_back(new Player("player", 1, 1, this));
 
+    Entities[0]->AddItem(Item("Basic sword", "sword", 1, 2, 0));
+
     Entities.push_back(new Rat("Rat", 2, 3, this));
 
     Entities.push_back(new Rat("Rat", 3, 4, this));
@@ -81,14 +83,26 @@ void World::DrawEntities(GameWindow &renderer)
         {
             renderer.DrawSprite(*p_entSpriteSheet, i->SpriteName, i->X, i->Y);
         }
+        }
+
+    auto player = Entities[0];
+
+    renderer.DrawSprite(*p_entSpriteSheet, player->SpriteName, player->X, player->Y);
+
+    for (int z = 1; z < Entities.size(); z++)
+    {
+        auto i = Entities[z];
         if (i->isMob)
         {
-            DrawText(std::to_string(i->CurrentHP).c_str(), i->X * 16 * 3, i->Y * 16 * 3, 12, RED);
+            // DrawText(std::to_string(i->CurrentHP).c_str(), i->X * 16 * 3, i->Y * 16 * 3, 12, RED);
+            float healthPercentage = static_cast<float>(i->CurrentHP) / i->MaxHP;
+            int greenBarWidth = static_cast<int>(healthPercentage * (11));
+            DrawRectangle((i->X * 16 * 3) + 8, (i->Y * 16 * 3) - 4, 11 * 3, 2, RED);
+            DrawRectangle((i->X * 16 * 3) + 8, (i->Y * 16 * 3) - 4, greenBarWidth * 3, 2, GREEN);
+            DrawText(std::to_string(i->Lvl).c_str(), (i->X * 16 * 3), (i->Y * 16 * 3) - 8, 12, YELLOW );
+            DrawText(i->Name.c_str(), (i->X * 16 * 3) + 4, (i->Y * 16 * 3) - 16, 12, YELLOW );
         }
     }
-    auto i = Entities[0];
-
-    renderer.DrawSprite(*p_entSpriteSheet, i->SpriteName, i->X, i->Y);
 }
 
 void World::StartTurn()

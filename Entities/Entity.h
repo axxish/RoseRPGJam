@@ -11,7 +11,7 @@ struct Entity
            World *worldRef);
     virtual bool DoTurn()
     {
-        return false;
+        return true;
     }
     virtual void OnUpdate(float deltaTime);
 
@@ -63,6 +63,9 @@ struct Entity
     bool isMob = true;
     bool isDead = false;
     bool isSolid = true;
+    bool isDoor = false;
+    bool isPlayer = false;
+    bool isHeal = false;
 
     bool turnSkip = false;
 
@@ -79,6 +82,7 @@ struct Player : public Entity
 {
     Player(const std::string &name, int x, int y, World *worldRef) : Entity(name, "hero", 4, 5, 3, x, y, worldRef)
     {
+        isPlayer = true;
     }
 
     bool DoTurn() override;
@@ -90,6 +94,22 @@ struct Door : public Entity
 {
     Door(int x, int y, World *worldRef) : Entity("Door", "door", 4, 5, 3, x, y, worldRef)
     {
+        isMob = false;
+        isSolid = false;
+        isDead = false;
+        isDoor = true;
+    }
+};
+
+struct Heal : public Entity
+{
+    Heal(int x, int y, World *worldRef) : Entity("heal", "heal", 4, 5, 3, x, y, worldRef)
+    {
+        isMob = false;
+        isSolid = false;
+        isDead = false;
+        isDoor = false;
+        isHeal = true;
     }
 };
 

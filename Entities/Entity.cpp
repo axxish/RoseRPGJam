@@ -161,6 +161,7 @@ void Entity::AttemptMove(int dx, int dy)
 
     int newTile = tilemap->tiles[newY * WorldRef->GetWidth() + newX];
 
+
     if (tileset[newTile].isSolid())
     {
         return;
@@ -174,6 +175,13 @@ void Entity::AttemptMove(int dx, int dy)
         {
             Move(newX, newY);
             return;
+        }
+        if(possibleOccupant->isDoor == true && this->isPlayer == true){
+            WorldRef->Descend();
+        }
+        if(possibleOccupant->isHeal == true && !this->isDead && this->isPlayer == true){
+            WorldRef->Entities[0]->CurrentHP = WorldRef->Entities[0]->MaxHP;
+            possibleOccupant->Die();
         }
         if (possibleOccupant->isSolid == false)
         {

@@ -6,6 +6,54 @@ World::World()
 {
 }
 
+void World::GenerateRat()
+{
+    std::pair<int, int> randi;
+    randi = gen1->GetRandomFloorTile();
+    auto rat = Rat(randi.first, randi.second, this);
+    auto rand2 = rand() % 4;
+    switch (rand2)
+    {
+    case 0:
+        rat.AddItem(Item("sword", "sword", 1, 3, 0));
+        break;
+    case 1:
+        rat.AddItem(Item("greatsword", "sword", 2, 5, 0));
+        break;
+    case 2:
+        rat.AddItem(Item("helm", "helm", 2, 0, 0));
+        break;
+    case 3:
+        rat.AddItem(Item("shield", "shield", 4, 1, 0));
+        break;
+    default:
+
+        break;
+    }
+    Entities.push_back(new Rat(rat));
+}
+
+void World::Descend()
+{
+    Entities.erase(Entities.begin() + 1, Entities.end());
+    gen1->Generate(4, 4, 8);
+
+    p_currentLevel = gen1->GetDungeonLayout();
+    std::pair<int, int> rand;
+    rand = gen1->GetRandomFloorTile();
+    Entities[0]->X = rand.first;
+    Entities[0]->Y = rand.second;
+    rand = gen1->GetRandomFloorTile();
+    Entities.push_back(new Door(rand.first, rand.second, this));
+
+    for(int i = 0; i < 4; i++){
+        GenerateRat();
+    }
+
+    rand = gen1->GetRandomFloorTile();
+    Entities.push_back(new Heal(rand.first, rand.second, this));
+}
+
 void World::Init(uint16_t worldWidth, uint16_t worldHeight, TileSet *worldTileSet, SpriteSheet *creatureSheet,
                  SpriteSheet *itemSpriteSheet)
 {
@@ -23,7 +71,7 @@ void World::Init(uint16_t worldWidth, uint16_t worldHeight, TileSet *worldTileSe
     // GenerateDungeonLayout(20, 20);
 
     gen1 = new DungeonGenerator(worldHeight, worldWidth);
-    gen1->Generate(5, 4, 8);
+    gen1->Generate(4, 4, 8);
     std::pair<int, int> rand;
 
     p_currentLevel = gen1->GetDungeonLayout();
@@ -32,8 +80,13 @@ void World::Init(uint16_t worldWidth, uint16_t worldHeight, TileSet *worldTileSe
     Entities.push_back(new Player("player", rand.first, rand.second, this));
     EventManager::Instance().Subscribe(EventType::PlayerMove,
                                        [this](std::shared_ptr<Event>) { this->OnMoveCameraToPlayer(); });
-    Camera.target.x = Entities[0]->X * 16 * 3;
-    Camera.target.y = Entities[0]->Y * 16 * 3;
+    rand = gen1->GetRandomFloorTile();
+    Entities.push_back(new Door(rand.first, rand.second, this));
+    rand = gen1->GetRandomFloorTile();
+    Entities.push_back(new Heal(rand.first, rand.second, this));
+    for(int i = 0; i < 4; i++){
+        GenerateRat();
+    }
 }
 
 void World::OnMoveCameraToPlayer()

@@ -42,6 +42,10 @@ class World
     void Init(uint16_t worldWidth, uint16_t worldHeight, TileSet *worldTileSet, SpriteSheet *creatureSheet,
               SpriteSheet *itemSpriteSheet);
 
+    void Descend();
+
+    void GenerateRat();
+
     uint16_t GetWidth()
     {
         return p_width;

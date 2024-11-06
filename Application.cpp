@@ -43,11 +43,16 @@ void Application::Run()
 
     p_entSpriteSheet->AddSprite("hero", {0, 0, 1, 1});
     p_entSpriteSheet->AddSprite("rat", {1, 1, 1, 1});
+    p_entSpriteSheet->AddSprite("door", {7, 0, 1, 1});
+    p_entSpriteSheet->AddSprite("heal", {7, 1, 1, 1});
     p_entSpriteSheet->AddSprite("200", {6, 1, 1, 1});
 
     p_itemSpriteSheet = new SpriteSheet("resources/items.png", p_appConfig.tileSize);
 
     p_itemSpriteSheet->AddSprite("sword", {1, 7, 1, 1});
+    p_itemSpriteSheet->AddSprite("greatsword", {3, 7, 1, 1});
+    p_itemSpriteSheet->AddSprite("helm", {2, 9, 1, 1});
+    p_itemSpriteSheet->AddSprite("shield", {6, 11, 1, 1});
 
     p_world.Init(20, 20, &p_worldTileSet, p_entSpriteSheet, p_itemSpriteSheet);
 
@@ -60,6 +65,8 @@ void Application::Run()
                       (float)(cameraY * 16 * p_appConfig.scale),
                       0,
                       1.0};
+
+    p_world.OnMoveCameraToPlayer();
 
     while (!WindowShouldClose())
     {

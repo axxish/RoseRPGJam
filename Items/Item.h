@@ -16,6 +16,9 @@ struct Item{
 };
 
 struct LootDrop{
+    LootDrop(Item item, int x, int y) : item(item), X(x), Y(y){
+
+    }
     Item item;
     int X;
     int Y;

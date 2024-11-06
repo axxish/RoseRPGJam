@@ -34,6 +34,7 @@ struct Entity
 
     bool AddItem(const Item &item);
     void RemoveItem(int num);
+    void DropItem(int num);
     /*void AddItem(const Item& item){
 
     }*/
@@ -65,6 +66,8 @@ struct Entity
     bool isMob = true;
     bool isDead = false;
     bool isSolid = true;
+
+    bool turnSkip = false;
 
     // std::vector<Item> Inventory;
 

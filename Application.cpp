@@ -105,13 +105,16 @@ void Application::DrawInGameUI()
         if (inventoryOpen && (i == currentItemInv))
         {
             DrawRectangle(2 * 3, (3 + i) * 16 * 3 + 1 * 3, 12 * 3, 12 * 3, RED);
+            if ((i < player->Inventory.size()))
+            {
+                DrawText("Q - DROP", 16 * 3, (3 + i) * 16 * 3, 12, WHITE);
+            }
         }
     }
 
     int i = 0;
     for (auto item : player->Inventory)
     {
-        
 
         p_gameWindow.DrawSprite(*p_itemSpriteSheet, item.SpriteName, 0, 3 + (i));
         i++;
@@ -140,12 +143,23 @@ void Application::OnUpdate(float deltaTime)
     }
     if (!inventoryOpen)
         p_world.OnUpdate(deltaTime);
-    else{
-        if(IsKeyPressed(KEY_S)){
+    else
+    {
+        if (IsKeyPressed(KEY_S))
+        {
             currentItemInv++;
         }
-        if(IsKeyPressed(KEY_W)){
+        if (IsKeyPressed(KEY_W))
+        {
             currentItemInv--;
+        }
+        if (IsKeyPressed(KEY_Q))
+        {
+            if (currentItemInv < p_world.Entities[0]->Inventory.size())
+            {
+                p_world.Entities[0]->DropItem(currentItemInv);
+                inventoryOpen = false;
+            }
         }
         currentItemInv = currentItemInv % 4;
     }

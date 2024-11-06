@@ -1,8 +1,8 @@
 #include "Entity.h"
 #include "../World/World.h"
+#include <algorithm>
 #include <iostream>
 #include <random>
-#include <algorithm>
 Entity::Entity(const std::string &name, const std::string &spriteName, int vigour, int wrath, int insight, int x, int y,
                World *worldRef)
     : Vigour(vigour), Wrath(wrath), Insight(insight)
@@ -49,6 +49,13 @@ void Entity::RemoveItem(int num)
     Inventory.erase(Inventory.begin() + num);
 }
 
+void Entity::DropItem(int num)
+{
+    WorldRef->AddLootDrop(Inventory.at(num), X, Y);
+    RemoveItem(num);
+    turnSkip = true;
+}
+
 void Entity::CalculateDerivedStats()
 {
 
@@ -59,7 +66,7 @@ void Entity::CalculateDerivedStats()
     Damage = Wrath * 2;
     MaxMana = Insight * 5;
 
-     // Adjust current health/mana proportionally to the new max values
+    // Adjust current health/mana proportionally to the new max values
     CurrentHP = std::min(MaxHP, CurrentHP * MaxHP / oldMaxHP);
     CurrentMana = std::min(MaxMana, CurrentMana * MaxMana / oldMaxMana);
 }
@@ -75,14 +82,12 @@ void Entity::GainXP(int amount)
 
 void Entity::LvlUp()
 {
-    
+
     Lvl++;
     Vigour++; // Example level-up bonuses
     Wrath++;
     Insight++;
     CalculateDerivedStats(); // Recalculate derived stats after leveling up
-
-   
 }
 
 int Entity::GetXPForNextLevel() const
@@ -185,6 +190,11 @@ void Entity::Die()
 bool Player::DoTurn()
 {
     // std::cout << "player's turn";
+    if (turnSkip)
+    {
+        turnSkip = false;
+        return true;
+    }
 
     std::vector<Entity *> &Entities = WorldRef->Entities;
     Camera2D *Camera = &WorldRef->Camera;
@@ -220,6 +230,28 @@ bool Player::DoTurn()
         AttemptMove(1, 0);
         // Camera->target = {(float)X * 16 * 3, (float)Y * 16 * 3};
         EventManager::Instance().Publish(i);
+        return true;
+    }
+    if (IsKeyPressed(KEY_E))
+    {
+        for (int i = 0; i < WorldRef->Drops.size(); i++)
+        {
+            auto drop = WorldRef->Drops[i];
+            if (drop.X == X && drop.Y == Y)
+            {
+                if (Inventory.size() < inv_size)
+                {
+                    AddItem(drop.item);
+
+                    WorldRef->Drops.erase(WorldRef->Drops.begin() + i);
+                    return true;
+                }
+            }
+        }
+
+        // AttemptMove(1, 0);
+        //  Camera->target = {(float)X * 16 * 3, (float)Y * 16 * 3};
+        // EventManager::Instance().Publish(i);
         return true;
     }
 

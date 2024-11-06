@@ -9,6 +9,11 @@ class World
 {
   public:
     World();
+    ~World(){
+      for(auto ent : Entities){
+        delete ent;
+      }
+    }
     void OnUpdate(float deltaTime);
     void OnRender(GameWindow &renderer);
 
@@ -44,8 +49,11 @@ class World
 
     void OnMoveCameraToPlayer();
 
+    void AddLootDrop(Item item,int x, int y);
 
-    std::vector<Entity*	> Entities;
+
+    std::vector<Entity*	> Entities; // this stores pointers to allow polymorphism for Entity inheritors
+    std::vector<LootDrop> Drops;
 
     Camera2D Camera;
 

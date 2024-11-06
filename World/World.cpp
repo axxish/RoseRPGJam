@@ -39,6 +39,11 @@ void World::OnMoveCameraToPlayer()
     Camera.target.y = Entities[0]->Y * 16 * 3;
 }
 
+void World::AddLootDrop(Item item,int x, int y){
+    
+    Drops.push_back(LootDrop(item, x, y));
+}
+
 TileSet *World::GetTileSet()
 {
     return p_worldTileSet;
@@ -126,7 +131,12 @@ void World::EndTurn()
 
 void World::OnRender(GameWindow &renderer)
 {
+    
+
     DrawTilemap(renderer);
+    for(auto drop : Drops){
+        renderer.DrawSprite(*p_itemSpriteSheet,drop.item.SpriteName, drop.X, drop.Y);
+    }
     DrawEntities(renderer);
 }
 

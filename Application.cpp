@@ -23,10 +23,8 @@ void Application::Loop()
 void Application::Run()
 {
 
-    
     int cameraX = 1;
     int cameraY = 1;
-
 
     InitWindow(p_appConfig.widthInTiles * p_appConfig.tileSize * p_appConfig.scale,
                p_appConfig.heightInTiles * p_appConfig.tileSize * p_appConfig.scale, p_appConfig.name.c_str());
@@ -53,6 +51,8 @@ void Application::Run()
 
     p_world.Init(8, 8, &p_worldTileSet, p_entSpriteSheet, p_itemSpriteSheet);
 
+    currentItemInv = 0;
+
     p_gameWindow.Init();
 
     p_world.Camera = {{(float)(p_gameWindow.GetWidthInPixels() / 2), (float)(p_gameWindow.GetHeightInPixels() / 2)},
@@ -72,25 +72,19 @@ void Application::Run()
 void Application::OnRender()
 {
 
-    
-        p_gameWindow.BeginMode();
-        BeginMode2D(p_world.Camera);
+    p_gameWindow.BeginMode();
+    BeginMode2D(p_world.Camera);
 
-        p_world.OnRender(p_gameWindow);
+    p_world.OnRender(p_gameWindow);
 
-        EndMode2D();
+    EndMode2D();
 
-        DrawInGameUI();
+    DrawInGameUI();
 
-        p_gameWindow.EndMode();
-    if (worldRunning)
-    {
-        p_gameWindow.Render(0, 0, 1);
-    }else{
-        BeginDrawing();
-            ClearBackground(BLACK);
-        EndDrawing();
-    }
+    p_gameWindow.EndMode();
+
+    p_gameWindow.Render(0, 0, 1);
+
     // DrawTexture(*p_world.p_entSpriteSheet.GetTexture(), 0, 0, WHITE);
 }
 
@@ -104,11 +98,22 @@ void Application::DrawInGameUI()
         p_gameWindow.DrawSprite(*p_uiSpriteSheet, "random", (p_appConfig.widthInTiles - 1),
                                 (p_appConfig.heightInTiles - 1));
     }
+
+    for (int i = 0; i < 4; i++)
+    {
+        DrawRectangle(2 * 3, (3 + i) * 16 * 3 + 1 * 3, 12 * 3, 12 * 3, GRAY);
+        if (inventoryOpen && (i == currentItemInv))
+        {
+            DrawRectangle(2 * 3, (3 + i) * 16 * 3 + 1 * 3, 12 * 3, 12 * 3, RED);
+        }
+    }
+
     int i = 0;
     for (auto item : player->Inventory)
     {
+        
 
-        p_gameWindow.DrawSprite(*p_itemSpriteSheet, item.SpriteName, (i), (p_appConfig.heightInTiles - 1));
+        p_gameWindow.DrawSprite(*p_itemSpriteSheet, item.SpriteName, 0, 3 + (i));
         i++;
     }
 
@@ -118,7 +123,7 @@ void Application::DrawInGameUI()
     float manaPercentage = static_cast<float>(player->CurrentMana) / player->MaxMana;
     DrawRectangle(0, 0, barLength * 3, 8, GRAY);
     DrawRectangle(0, 0, barLength * 3, 8, GRAY);
-    DrawRectangle(0, 0, healthPercentage * barLength * 3, 8, GREEN);
+    DrawRectangle(0, 0, healthPercentage * barLength * 3, 8, RED);
     DrawRectangle(0, 8, manaPercentage * barLength * 3, 8, BLUE);
     std::string lvlText = "LVL: ";
 
@@ -129,13 +134,19 @@ void Application::DrawInGameUI()
 
 void Application::OnUpdate(float deltaTime)
 {
-    if (IsKeyPressed(KEY_ESCAPE)){
-       worldRunning = !worldRunning;
-   }
-        
-
-    if (worldRunning)
+    if (IsKeyPressed(KEY_I) && p_world.GetIsItPlayerMove())
     {
+        inventoryOpen = !inventoryOpen;
+    }
+    if (!inventoryOpen)
         p_world.OnUpdate(deltaTime);
+    else{
+        if(IsKeyPressed(KEY_S)){
+            currentItemInv++;
+        }
+        if(IsKeyPressed(KEY_W)){
+            currentItemInv--;
+        }
+        currentItemInv = currentItemInv % 4;
     }
 }

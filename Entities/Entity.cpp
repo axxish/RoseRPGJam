@@ -14,6 +14,7 @@ Entity::Entity(const std::string &name, const std::string &spriteName, int vigou
     Y = y;
     WorldRef = worldRef;
     Lvl = 1;
+    XP = 0;
     CalculateDerivedStats();
     CurrentHP = MaxHP;
     CurrentMana = MaxMana;
@@ -132,7 +133,9 @@ void Entity::Attack(Entity *target)
         target->ReceiveDamage(Damage);
         if (target->isDead)
         {
+            std::cout<<"target dead\n";
             this->GainXP(target->XpBounty);
+            std::cout << this->XP << " " << this->GetXPForNextLevel();
             this->XpBounty += target->XpBounty;
         }
     }

@@ -38,9 +38,7 @@ class Application
     GameWindow p_gameWindow;
 
     TileSet p_worldTileSet;
-    SpriteSheet *p_entSpriteSheet;
-    SpriteSheet *p_uiSpriteSheet;
-    SpriteSheet *p_itemSpriteSheet;
+    std::shared_ptr<SpriteSheet> p_spriteSheet;
 
     World p_world;
 };

@@ -31,30 +31,23 @@ void Application::Run()
     SetTargetFPS(144);
     SetExitKey(0);
 
-    p_uiSpriteSheet = new SpriteSheet("resources/iconsui.png", p_appConfig.tileSize);
-    p_uiSpriteSheet->AddSprite("random", {4, 1, 1, 1});
+    p_spriteSheet = std::make_shared<SpriteSheet>("resources/textures.png", p_appConfig.tileSize);
+    p_spriteSheet->AddSprite("random", {4, 0, 1, 1});
 
-    p_worldTileSet = TileSet("resources/maptiles.png", p_appConfig.tileSize);
-    p_worldTileSet.addTileType("air", {1, 7, 1, 1}, false);
-    p_worldTileSet.addTileType("floor", {3, 3, 1, 1}, false);
-    p_worldTileSet.addTileType("wall", {1, 1, 1, 1}, true);
+    p_worldTileSet = TileSet(p_spriteSheet, p_appConfig.tileSize);
+    p_worldTileSet.addTileType("air", {0, 0, 1, 1}, false);
+    p_worldTileSet.addTileType("floor", {2, 0, 1, 1}, false);
+    p_worldTileSet.addTileType("wall", {1, 0, 1, 1}, true);
+    p_spriteSheet->AddSprite("hero", {3, 2, 1, 1});
+    p_spriteSheet->AddSprite("rat", {0, 2, 1, 1});
+    p_spriteSheet->AddSprite("door", {3, 0, 1, 1});
+    p_spriteSheet->AddSprite("heal", {4, 2, 1, 1});
+    p_spriteSheet->AddSprite("sword", {1, 3, 1, 1});
+    p_spriteSheet->AddSprite("greatsword", {0, 3, 1, 1});
+    p_spriteSheet->AddSprite("helm", {0, 1, 1, 1});
+    p_spriteSheet->AddSprite("shield", {4, 1, 1, 1});
 
-    p_entSpriteSheet = new SpriteSheet("resources/creatures.png", p_appConfig.tileSize);
-
-    p_entSpriteSheet->AddSprite("hero", {0, 0, 1, 1});
-    p_entSpriteSheet->AddSprite("rat", {1, 1, 1, 1});
-    p_entSpriteSheet->AddSprite("door", {7, 0, 1, 1});
-    p_entSpriteSheet->AddSprite("heal", {7, 1, 1, 1});
-    p_entSpriteSheet->AddSprite("200", {6, 1, 1, 1});
-
-    p_itemSpriteSheet = new SpriteSheet("resources/items.png", p_appConfig.tileSize);
-
-    p_itemSpriteSheet->AddSprite("sword", {1, 7, 1, 1});
-    p_itemSpriteSheet->AddSprite("greatsword", {3, 7, 1, 1});
-    p_itemSpriteSheet->AddSprite("helm", {2, 9, 1, 1});
-    p_itemSpriteSheet->AddSprite("shield", {6, 11, 1, 1});
-
-    p_world.Init(20, 20, &p_worldTileSet, p_entSpriteSheet, p_itemSpriteSheet);
+    p_world.Init(20, 20, &p_worldTileSet, p_spriteSheet, p_spriteSheet);
 
     currentItemInv = 0;
 
@@ -92,7 +85,7 @@ void Application::OnRender()
 
     p_gameWindow.Render(0, 0, 1);
 
-    // DrawTexture(*p_world.p_entSpriteSheet.GetTexture(), 0, 0, WHITE);
+    // DrawTexture(*p_world.p_spriteSheet.GetTexture(), 0, 0, WHITE);
 }
 
 void Application::DrawInGameUI()
@@ -102,7 +95,7 @@ void Application::DrawInGameUI()
         return;
     if (p_world.GetIsItPlayerMove() == false)
     {
-        p_gameWindow.DrawSprite(*p_uiSpriteSheet, "random", (p_appConfig.widthInTiles - 1),
+        p_gameWindow.DrawSprite(*p_spriteSheet, "random", (p_appConfig.widthInTiles - 1),
                                 (p_appConfig.heightInTiles - 1));
     }
 
@@ -123,7 +116,7 @@ void Application::DrawInGameUI()
     for (auto item : player->Inventory)
     {
 
-        p_gameWindow.DrawSprite(*p_itemSpriteSheet, item.SpriteName, 0, 3 + (i));
+        p_gameWindow.DrawSprite(*p_spriteSheet, item.SpriteName, 0, 3 + (i));
         i++;
     }
 

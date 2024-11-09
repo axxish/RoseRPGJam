@@ -1,8 +1,9 @@
 #include "Tileset.h"
+#include <memory>
 
-TileSet::TileSet(const std::string &spritesheetPath, uint16_t spritesheetResolution)
+TileSet::TileSet(std::shared_ptr<SpriteSheet> spritesheet, uint16_t spritesheetResolution)
 {
-    p_spriteSheet = new SpriteSheet(spritesheetPath, spritesheetResolution);
+    p_spriteSheet = spritesheet;
 }
 
 void TileSet::addTileType(const std::string &textureName, Sprite spriteInfo, bool isSolid)

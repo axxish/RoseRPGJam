@@ -10,7 +10,7 @@ class TileSet
       
     }
 
-    TileSet(const std::string& spritesheetPath, uint16_t spritesheetResolution);
+    TileSet(std::shared_ptr<SpriteSheet>, uint16_t spritesheetResolution);
 
     void addTileType(const std::string &textureName, Sprite spriteInfo, bool isSolid);
 
@@ -26,7 +26,7 @@ class TileSet
 
   private:
     // the spritesheet associated to this tileset
-    SpriteSheet* p_spriteSheet;
+    std::shared_ptr<SpriteSheet> p_spriteSheet;
     // for now, the tileTypes are simply associated with their vector index
     std::vector<TileType> p_tileTypes;
 };

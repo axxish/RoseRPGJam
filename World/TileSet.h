@@ -2,6 +2,7 @@
 #include "../Graphics/SpriteSheet.h"
 #include "TileType.h"
 #include <vector>
+#include <memory>
 
 class TileSet
 {

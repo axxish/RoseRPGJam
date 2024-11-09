@@ -39,8 +39,7 @@ class World
 
     void EndTurn();
 
-    void Init(uint16_t worldWidth, uint16_t worldHeight, TileSet *worldTileSet, SpriteSheet *creatureSheet,
-              SpriteSheet *itemSpriteSheet);
+    void Init(uint16_t worldWidth, uint16_t worldHeight, TileSet *worldTileSet, std::shared_ptr<SpriteSheet> spriteSheet);
 
     void Descend();
 
@@ -77,9 +76,9 @@ class World
     
     Tilemap p_currentLevel;
 
-    SpriteSheet *p_entSpriteSheet;
+    std::shared_ptr<SpriteSheet> p_spriteSheet;
     TileSet *p_worldTileSet;
-    SpriteSheet *p_itemSpriteSheet;
+    
 
     DungeonGenerator* gen1;
 

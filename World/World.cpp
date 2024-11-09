@@ -54,17 +54,15 @@ void World::Descend()
     Entities.push_back(new Heal(rand.first, rand.second, this));
 }
 
-void World::Init(uint16_t worldWidth, uint16_t worldHeight, TileSet *worldTileSet, SpriteSheet *creatureSheet,
-                 SpriteSheet *itemSpriteSheet)
+void World::Init(uint16_t worldWidth, uint16_t worldHeight, TileSet *worldTileSet, std::shared_ptr<SpriteSheet> spriteSheet)
 {
 
     p_width = worldWidth;
     p_height = worldHeight;
     depth = 0;
     p_worldTileSet = worldTileSet;
-    p_entSpriteSheet = creatureSheet;
-    p_itemSpriteSheet = itemSpriteSheet;
-
+    p_spriteSheet = spriteSheet;
+ 
     // p_currentLevel = Tilemap(worldWidth, worldHeight);
     // p_currentLevel.tiles = testWorld;
 
@@ -139,7 +137,7 @@ void World::DrawDeadEntities(GameWindow &renderer)
         auto i = Entities[z];
         if (i->isDead == true)
         {
-            renderer.DrawSpriteGray(*p_entSpriteSheet, i->SpriteName, i->X, i->Y);
+            renderer.DrawSpriteGray(*p_spriteSheet, i->SpriteName, i->X, i->Y);
         }
     }
 }
@@ -155,13 +153,13 @@ void World::DrawAliveEntities(GameWindow &renderer)
         }
         else
         {
-            renderer.DrawSprite(*p_entSpriteSheet, i->SpriteName, i->X, i->Y);
+            renderer.DrawSprite(*p_spriteSheet, i->SpriteName, i->X, i->Y);
         }
     }
 
     auto player = Entities[0];
 
-    renderer.DrawSprite(*p_entSpriteSheet, player->SpriteName, player->X, player->Y);
+    renderer.DrawSprite(*p_spriteSheet, player->SpriteName, player->X, player->Y);
 
     for (int z = 1; z < Entities.size(); z++)
     {
@@ -205,7 +203,7 @@ void World::OnRender(GameWindow &renderer)
     DrawDeadEntities(renderer);
     for (auto drop : Drops)
     {
-        renderer.DrawSprite(*p_itemSpriteSheet, drop.item.SpriteName, drop.X, drop.Y);
+        renderer.DrawSprite(*p_spriteSheet, drop.item.SpriteName, drop.X, drop.Y);
     }
     DrawAliveEntities(renderer);
 }

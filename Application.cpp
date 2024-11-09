@@ -47,7 +47,7 @@ void Application::Run()
     p_spriteSheet->AddSprite("helm", {0, 1, 1, 1});
     p_spriteSheet->AddSprite("shield", {4, 1, 1, 1});
 
-    p_world.Init(20, 20, &p_worldTileSet, p_spriteSheet, p_spriteSheet);
+    p_world.Init(20, 20, &p_worldTileSet, p_spriteSheet);
 
     currentItemInv = 0;
 
@@ -85,7 +85,6 @@ void Application::OnRender()
 
     p_gameWindow.Render(0, 0, 1);
 
-    // DrawTexture(*p_world.p_spriteSheet.GetTexture(), 0, 0, WHITE);
 }
 
 void Application::DrawInGameUI()

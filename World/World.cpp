@@ -36,13 +36,16 @@ void World::GenerateRat()
 void World::Descend()
 {
     Entities.erase(Entities.begin() + 1, Entities.end());
-    gen1->Generate(4, 4, 8);
+    gen1->Generate(4, 8);
 
     p_currentLevel = gen1->GetDungeonLayout();
     std::pair<int, int> rand;
     rand = gen1->GetRandomFloorTile();
+    std::cout << rand.first << " " << rand.second << "\n";
+    std::cout << Entities[0]->X << " " << Entities[0]->Y << "\n";
     Entities[0]->X = rand.first;
     Entities[0]->Y = rand.second;
+    std::cout << Entities[0]->X << " " << Entities[0]->Y << "\n";
     rand = gen1->GetRandomFloorTile();
     Entities.push_back(new Door(rand.first, rand.second, this));
 
@@ -66,10 +69,9 @@ void World::Init(uint16_t worldWidth, uint16_t worldHeight, TileSet *worldTileSe
     // p_currentLevel = Tilemap(worldWidth, worldHeight);
     // p_currentLevel.tiles = testWorld;
 
-    // GenerateDungeonLayout(20, 20);
 
-    gen1 = new DungeonGenerator(worldHeight, worldWidth);
-    gen1->Generate(4, 4, 8);
+    gen1 = std::make_shared<DungeonGenerator>(worldHeight, worldWidth);
+    gen1->Generate(4, 8);
     std::pair<int, int> rand;
 
     p_currentLevel = gen1->GetDungeonLayout();
@@ -78,13 +80,8 @@ void World::Init(uint16_t worldWidth, uint16_t worldHeight, TileSet *worldTileSe
     Entities.push_back(new Player("player", rand.first, rand.second, this));
     EventManager::Instance().Subscribe(EventType::PlayerMove,
                                        [this](std::shared_ptr<Event>) { this->OnMoveCameraToPlayer(); });
-    rand = gen1->GetRandomFloorTile();
-    Entities.push_back(new Door(rand.first, rand.second, this));
-    rand = gen1->GetRandomFloorTile();
-    Entities.push_back(new Heal(rand.first, rand.second, this));
-    for(int i = 0; i < 4; i++){
-        GenerateRat();
-    }
+    
+   Descend();
 }
 
 void World::OnMoveCameraToPlayer()
@@ -92,6 +89,12 @@ void World::OnMoveCameraToPlayer()
     Camera.target.x = Entities[0]->X * 16 * 3;
     Camera.target.y = Entities[0]->Y * 16 * 3;
 }
+
+void World::OnDescend()
+{
+    OnMoveCameraToPlayer();
+}
+
 
 void World::AddLootDrop(Item item, int x, int y)
 {

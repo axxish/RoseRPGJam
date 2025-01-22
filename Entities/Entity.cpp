@@ -15,6 +15,7 @@ Entity::Entity(const std::string &name, const std::string &spriteName, int vigou
     WorldRef = worldRef;
     Lvl = 1;
     XP = 0;
+    XpBounty = 30;
     CalculateDerivedStats();
     CurrentHP = MaxHP;
     CurrentMana = MaxMana;
@@ -180,7 +181,9 @@ void Entity::AttemptMove(int dx, int dy)
             return;
         }
         if(possibleOccupant->isDoor == true && this->isPlayer == true){
-            WorldRef->Descend();
+            Move(newX, newY);
+            //WorldRef->Descend();
+            return;
         }
         if(possibleOccupant->isHeal == true && !this->isDead && this->isPlayer == true){
             WorldRef->Entities[0]->CurrentHP = WorldRef->Entities[0]->MaxHP;
@@ -271,6 +274,13 @@ bool Player::DoTurn()
             }
         }
 
+        for(auto entity : Entities){
+            if(entity->isDoor == true && entity->X == X && entity->Y == Y){
+                WorldRef->Descend();
+                EventManager::Instance().Publish(i);
+                return true;
+            }
+        }
         // AttemptMove(1, 0);
         //  Camera->target = {(float)X * 16 * 3, (float)Y * 16 * 3};
         // EventManager::Instance().Publish(i);

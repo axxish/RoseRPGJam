@@ -58,6 +58,7 @@ class World
     bool GetIsItPlayerMove();
 
     void OnMoveCameraToPlayer();
+    void OnDescend();
 
     void AddLootDrop(Item item, int x, int y);
 
@@ -80,7 +81,7 @@ class World
     TileSet *p_worldTileSet;
     
 
-    DungeonGenerator* gen1;
+    std::shared_ptr<DungeonGenerator> gen1;
 
     // this is for the turn managing
     size_t p_currentEntityIndex = 0;

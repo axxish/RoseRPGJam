@@ -22,7 +22,7 @@ void Application::Loop()
 
 void Application::Run()
 {
-
+    std::srand(std::time(nullptr));
     int cameraX = 1;
     int cameraY = 1;
 
@@ -38,6 +38,11 @@ void Application::Run()
     p_worldTileSet.addTileType("air", {0, 0, 1, 1}, false);
     p_worldTileSet.addTileType("floor", {2, 0, 1, 1}, false);
     p_worldTileSet.addTileType("wall", {1, 0, 1, 1}, true);
+    p_worldTileSet.addTileType("debugBlue", {0, 5, 1, 1}, false);
+    p_worldTileSet.addTileType("debugRed", {1, 5, 1, 1}, false);
+    p_worldTileSet.addTileType("debugGreen", {2, 5, 1, 1}, false);
+    p_worldTileSet.addTileType("debugYellow", {3, 5, 1, 1}, false);
+    p_worldTileSet.addTileType("debugEmerald", {4, 5, 1, 1}, false);
     p_spriteSheet->AddSprite("hero", {3, 2, 1, 1});
     p_spriteSheet->AddSprite("rat", {0, 2, 1, 1});
     p_spriteSheet->AddSprite("door", {3, 0, 1, 1});
@@ -46,6 +51,8 @@ void Application::Run()
     p_spriteSheet->AddSprite("greatsword", {0, 3, 1, 1});
     p_spriteSheet->AddSprite("helm", {0, 1, 1, 1});
     p_spriteSheet->AddSprite("shield", {4, 1, 1, 1});
+    
+   
 
     p_world.Init(20, 20, &p_worldTileSet, p_spriteSheet);
 
@@ -57,7 +64,7 @@ void Application::Run()
                       (float)(cameraX * 16 * p_appConfig.scale),
                       (float)(cameraY * 16 * p_appConfig.scale),
                       0,
-                      1.0};
+                      1};
 
     p_world.OnMoveCameraToPlayer();
 
@@ -84,7 +91,7 @@ void Application::OnRender()
     p_gameWindow.EndMode();
 
     p_gameWindow.Render(0, 0, 1);
-
+    
 }
 
 void Application::DrawInGameUI()
@@ -136,6 +143,9 @@ void Application::DrawInGameUI()
 
 void Application::OnUpdate(float deltaTime)
 {
+    if(IsKeyPressed(KEY_R)){
+        p_world.Descend();
+    }
     if (IsKeyPressed(KEY_I) && p_world.GetIsItPlayerMove())
     {
         inventoryOpen = !inventoryOpen;

@@ -1,5 +1,7 @@
 #pragma once
+#include "BSP.h"
 #include "Tilemap.h"
+#include <iostream>
 #include <utility>
 
 struct Room
@@ -26,9 +28,15 @@ struct Room
 
 class DungeonGenerator
 {
+
   public:
     DungeonGenerator(int width, int height) : width(width), height(height), dungeonLayout(width, height)
     {
+    }
+
+    void Generate(int minRoomSize, int maxRoomSize)
+    {
+
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
@@ -36,32 +44,96 @@ class DungeonGenerator
                 dungeonLayout.SetTile(i, j, 0);
             }
         }
-    }
 
-    void Generate(int numRooms, int minRoomSize, int maxRoomSize)
-    {
+        Node *root = new Node(0, 0, width, height);
+        std::vector<std::shared_ptr<Node>> leaves;
+        root->split(minRoomSize);
+        root->getLeaves(leaves);
+
         std::vector<Room> rooms;
 
-        // Step 1: Place rooms
-        for (int i = 0; i < numRooms; ++i)
+        for (auto n : leaves)
         {
-            int roomWidth = minRoomSize + rand() % (maxRoomSize - minRoomSize + 1);
-            int roomHeight = minRoomSize + rand() % (maxRoomSize - minRoomSize + 1);
-            int x = rand() % (width - roomWidth - 1) + 1; // Leave a 1-tile border
-            int y = rand() % (height - roomHeight - 1) + 1;
 
-            Room newRoom(x, y, roomWidth, roomHeight);
+            int roomWidth = random(minRoomSize, std::max(minRoomSize, std::min(maxRoomSize, n->width - 2)));
+            int roomHeight = random(minRoomSize, std::max(minRoomSize, std::min(maxRoomSize, n->height - 2)));
 
-            if (!RoomCollides(rooms, newRoom))
+            // Ensure the room position is within valid ranges
+            int roomX = n->x + random(1, std::max(1, n->width - roomWidth - 1));
+            int roomY = n->y + random(1, std::max(1, n->height - roomHeight - 1));
+
+            rooms.push_back(Room(roomX, roomY, roomWidth, roomHeight));
+        }
+
+        int i = 0;
+        for (auto n : rooms)
+        {
+            //std::cout << i << ": " << n.x << " " << n.y << " " << n.width << " " << n.height << "\n";
+            // std::cout << i;
+            for (int y = n.y; y < ((n.y + n.height)); y++)
             {
-                CreateRoomWithWalls(newRoom);
-                if (!rooms.empty())
+
+                for (int x = n.x; x < (n.x + n.width); x++)
                 {
-                    ConnectRooms(rooms.back(), newRoom);
+                    dungeonLayout.SetTile(x, y, 1);
                 }
-                rooms.push_back(newRoom);
+            }
+            i++;
+        }
+        // Connect rooms with corridors
+        for (size_t i = 1; i < rooms.size(); i++)
+        {
+            Room &roomA = rooms[i - 1];
+            Room &roomB = rooms[i];
+
+            // Get the center points of the rooms
+            int centerAx = roomA.x + roomA.width / 2;
+            int centerAy = roomA.y + roomA.height / 2;
+            int centerBx = roomB.x + roomB.width / 2;
+            int centerBy = roomB.y + roomB.height / 2;
+
+            // Create horizontal corridor
+            for (int x = std::min(centerAx, centerBx); x <= std::max(centerAx, centerBx); x++)
+            {
+                dungeonLayout.SetTile(x, centerAy, 1);
+            }
+
+            // Create vertical corridor
+            for (int y = std::min(centerAy, centerBy); y <= std::max(centerAy, centerBy); y++)
+            {
+                dungeonLayout.SetTile(centerBx, y, 1);
             }
         }
+
+        // Place walls around the floor structures
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                if (dungeonLayout.GetTile(x, y) == 1)
+                {
+                    // Check the neighboring tiles and place walls if they are empty
+                    if (dungeonLayout.GetTile(x - 1, y) == 0)
+                        dungeonLayout.SetTile(x - 1, y, 2);
+                    if (dungeonLayout.GetTile(x + 1, y) == 0)
+                        dungeonLayout.SetTile(x + 1, y, 2);
+                    if (dungeonLayout.GetTile(x, y - 1) == 0)
+                        dungeonLayout.SetTile(x, y - 1, 2);
+                    if (dungeonLayout.GetTile(x, y + 1) == 0)
+                        dungeonLayout.SetTile(x, y + 1, 2);
+                    if (dungeonLayout.GetTile(x - 1, y - 1) == 0)
+                        dungeonLayout.SetTile(x - 1, y - 1, 2);
+                    if (dungeonLayout.GetTile(x + 1, y - 1) == 0)
+                        dungeonLayout.SetTile(x + 1, y - 1, 2);
+                    if (dungeonLayout.GetTile(x - 1, y + 1) == 0)
+                        dungeonLayout.SetTile(x - 1, y + 1, 2);
+                    if (dungeonLayout.GetTile(x + 1, y + 1) == 0)
+                        dungeonLayout.SetTile(x + 1, y + 1, 2);
+                }
+            }
+        }
+        //std::cout << dungeonLayout.getWidth() << " " << dungeonLayout.getHeight() << "\n";
+        delete root;
     }
 
     Tilemap GetDungeonLayout()
@@ -84,121 +156,4 @@ class DungeonGenerator
   private:
     int width, height;
     Tilemap dungeonLayout;
-
-    bool RoomCollides(const std::vector<Room> &rooms, const Room &newRoom)
-    {
-        for (const Room &room : rooms)
-        {
-            if (newRoom.Intersects(room))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    void CreateRoomWithWalls(const Room &room)
-    {
-        // Build walls around the room
-        for (int x = room.x - 1; x <= room.x + room.width; ++x)
-        {
-            dungeonLayout.SetTile(x, room.y - 1, 2);           // Top wall
-            dungeonLayout.SetTile(x, room.y + room.height, 2); // Bottom wall
-        }
-        for (int y = room.y - 1; y <= room.y + room.height; ++y)
-        {
-            dungeonLayout.SetTile(room.x - 1, y, 2);          // Left wall
-            dungeonLayout.SetTile(room.x + room.width, y, 2); // Right wall
-        }
-
-        // Carve out floor inside the room boundaries
-        for (int x = room.x; x < room.x + room.width; ++x)
-        {
-            for (int y = room.y; y < room.y + room.height; ++y)
-            {
-                dungeonLayout.SetTile(x, y, 1); // Floor tile
-            }
-        }
-    }
-
-    void ConnectRooms(const Room &room1, const Room &room2)
-    {
-        auto [x1, y1] = room1.Center();
-        auto [x2, y2] = room2.Center();
-
-        if (rand() % 2 == 0)
-        {
-            // Horizontal first
-            CreateHorizontalCorridor(x1, x2, y1);
-            CreateVerticalCorridor(y1, y2, x2);
-        }
-        else
-        {
-            // Vertical first
-            CreateVerticalCorridor(y1, y2, x1);
-            CreateHorizontalCorridor(x1, x2, y2);
-        }
-    }
-
-    void CreateHorizontalCorridor(int x1, int x2, int y)
-    {
-        int minX = std::min(x1, x2);
-        int maxX = std::max(x1, x2);
-
-        for (int x = minX; x <= maxX; ++x)
-        {
-            dungeonLayout.SetTile(x, y, 1); // Set corridor floor tile
-
-            // Place walls only if the tile is empty (0) and not part of a room
-            if (y > 0 && dungeonLayout.GetTile(x, y - 1) == 0)
-            {
-                dungeonLayout.SetTile(x, y - 1, 2); // Wall above
-            }
-            if (y < height - 1 && dungeonLayout.GetTile(x, y + 1) == 0)
-            {
-                dungeonLayout.SetTile(x, y + 1, 2); // Wall below
-            }
-        }
-
-        // End walls on the left and right of the corridor if they are empty
-        if (minX > 0 && dungeonLayout.GetTile(minX - 1, y) == 0)
-        {
-            dungeonLayout.SetTile(minX - 1, y, 2); // Left wall
-        }
-        if (maxX < width - 1 && dungeonLayout.GetTile(maxX + 1, y) == 0)
-        {
-            dungeonLayout.SetTile(maxX + 1, y, 2); // Right wall
-        }
-    }
-
-    void CreateVerticalCorridor(int y1, int y2, int x)
-    {
-        int minY = std::min(y1, y2);
-        int maxY = std::max(y1, y2);
-
-        for (int y = minY; y <= maxY; ++y)
-        {
-            dungeonLayout.SetTile(x, y, 1); // Set corridor floor tile
-
-            // Place walls only if the tile is empty (0) and not part of a room
-            if (x > 0 && dungeonLayout.GetTile(x - 1, y) == 0)
-            {
-                dungeonLayout.SetTile(x - 1, y, 2); // Wall to the left
-            }
-            if (x < width - 1 && dungeonLayout.GetTile(x + 1, y) == 0)
-            {
-                dungeonLayout.SetTile(x + 1, y, 2); // Wall to the right
-            }
-        }
-
-        // End walls at the top and bottom of the corridor if they are empty
-        if (minY > 0 && dungeonLayout.GetTile(x, minY - 1) == 0)
-        {
-            dungeonLayout.SetTile(x, minY - 1, 2); // Top wall
-        }
-        if (maxY < height - 1 && dungeonLayout.GetTile(x, maxY + 1) == 0)
-        {
-            dungeonLayout.SetTile(x, maxY + 1, 2); // Bottom wall
-        }
-    }
 };

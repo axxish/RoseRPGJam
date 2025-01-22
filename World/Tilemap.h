@@ -12,6 +12,7 @@ class Tilemap
     {
         p_width = 0;
         p_height = 0;
+        
     }
 
     // since tiles are identified with numbers, the type for the tile array is simply int

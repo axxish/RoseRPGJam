@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 
+struct Entity;
 
 struct Item{
     std::string Name;
@@ -8,18 +9,23 @@ struct Item{
     float Vigour;
     float Wrath;
     float Insight;
-
+    
     Item(const std::string& name, const std::string& spriteName, float vigour, float wrath, float insight) : 
     Name(name), SpriteName(spriteName), Vigour(vigour), Wrath(wrath), Insight(insight) {
 
     }
+
+
 };
 
-struct LootDrop{
-    LootDrop(Item item, int x, int y) : item(item), X(x), Y(y){
+class ItemBehaviour{
+    virtual void OnUse(Entity* entity) ;
+};
+
+class HealPotionBehaviour : public ItemBehaviour{
+    int healAmount;
+    HealPotionBehaviour(int healAmount) : healAmount(healAmount) {
 
     }
-    Item item;
-    int X;
-    int Y;
+    void OnUse(Entity* entity) override;
 };

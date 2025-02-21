@@ -26,8 +26,8 @@ void Application::Run()
     int cameraX = 1;
     int cameraY = 1;
 
-    InitWindow(p_appConfig.widthInTiles * p_appConfig.tileSize * p_appConfig.scale,
-               p_appConfig.heightInTiles * p_appConfig.tileSize * p_appConfig.scale, p_appConfig.name.c_str());
+    InitWindow(800,
+               600, p_appConfig.name.c_str());
     SetTargetFPS(144);
     SetExitKey(0);
 
@@ -64,7 +64,7 @@ void Application::Run()
                       (float)(cameraX * 16 * p_appConfig.scale),
                       (float)(cameraY * 16 * p_appConfig.scale),
                       0,
-                      1};
+                      1};  
 
     p_world.OnMoveCameraToPlayer();
 
@@ -105,7 +105,7 @@ void Application::DrawInGameUI()
                                 (p_appConfig.heightInTiles - 1));
     }
 
-    for (int i = 0; i < 4; i++)
+    /*for (int i = 0; i < 4; i++)
     {
         DrawRectangle(2 * 3, (3 + i) * 16 * 3 + 1 * 3, 12 * 3, 12 * 3, GRAY);
         if (inventoryOpen && (i == currentItemInv))
@@ -116,7 +116,9 @@ void Application::DrawInGameUI()
                 DrawText("Q - DROP", 16 * 3, (3 + i) * 16 * 3, 12, WHITE);
             }
         }
-    }
+    }*/
+
+   /*
 
     int i = 0;
     for (auto item : player->Inventory)
@@ -125,7 +127,7 @@ void Application::DrawInGameUI()
         p_gameWindow.DrawSprite(*p_spriteSheet, item.SpriteName, 0, 3 + (i));
         i++;
     }
-
+    */
     int barLength = 60;
 
     float healthPercentage = static_cast<float>(player->CurrentHP) / player->MaxHP;
@@ -164,11 +166,12 @@ void Application::OnUpdate(float deltaTime)
         }
         if (IsKeyPressed(KEY_Q))
         {
+            /*
             if (currentItemInv < p_world.Entities[0]->Inventory.size())
             {
                 p_world.Entities[0]->DropItem(currentItemInv);
                 inventoryOpen = false;
-            }
+            }*/
         }
         currentItemInv = currentItemInv % 4;
     }

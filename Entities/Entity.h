@@ -39,9 +39,9 @@ struct Entity
     std::string Name;
     std::string SpriteName;
 
-    std::vector<Item> Inventory;
+    /*std::vector<Item> Inventory;
     const static int inv_size = 4;
-
+    */
     int Lvl;
     int XP;
     int XpBounty;

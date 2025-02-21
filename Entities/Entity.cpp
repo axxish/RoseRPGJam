@@ -7,7 +7,7 @@ Entity::Entity(const std::string &name, const std::string &spriteName, int vigou
                World *worldRef)
     : Vigour(vigour), Wrath(wrath), Insight(insight)
 {
-    Inventory.reserve(4);
+    //Inventory.reserve(4);
     Name = name;
     SpriteName = spriteName;
     X = x;
@@ -32,7 +32,7 @@ void Entity::OnUpdate(float deltaTime)
 bool Entity::AddItem(const Item &item)
 {
 
-    if (Inventory.size() < inv_size)
+    /*if (Inventory.size() < inv_size)
     {
         Inventory.push_back(item);
 
@@ -44,13 +44,13 @@ bool Entity::AddItem(const Item &item)
         // Recalculate derived stats based on updated primary attributes
         CalculateDerivedStats();
         return true;
-    }
+    }*/
     return false;
 }
 
 void Entity::RemoveItem(int num)
 {
-    
+    /*
     auto item = Inventory[num];
     Vigour -= item.Vigour;
     Wrath -= item.Wrath;
@@ -58,14 +58,17 @@ void Entity::RemoveItem(int num)
     CalculateDerivedStats();
 
     Inventory.erase(Inventory.begin() + num);
+    */
 }
 
 void Entity::DropItem(int num)
 {
+    /*
     if(num >= Inventory.size() ) return;
     WorldRef->AddLootDrop(Inventory.at(num), X, Y); 
     RemoveItem(num);
     turnSkip = true;
+    */
 }
 
 void Entity::CalculateDerivedStats()
@@ -259,6 +262,7 @@ bool Player::DoTurn()
     }
     if (IsKeyPressed(KEY_E))
     {
+        /*
         for (int i = 0; i < WorldRef->Drops.size(); i++)
         {
             auto drop = WorldRef->Drops[i];
@@ -273,7 +277,7 @@ bool Player::DoTurn()
                 }
             }
         }
-
+        */
         for(auto entity : Entities){
             if(entity->isDoor == true && entity->X == X && entity->Y == Y){
                 WorldRef->Descend();

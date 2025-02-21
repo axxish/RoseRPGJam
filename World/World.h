@@ -63,8 +63,7 @@ class World
     void AddLootDrop(Item item, int x, int y);
 
     std::vector<Entity *> Entities; // this stores pointers to allow polymorphism for Entity inheritors
-    std::vector<LootDrop> Drops;
-
+    
     Camera2D Camera;
 
     bool isDragging = false;

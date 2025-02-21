@@ -15,16 +15,16 @@ void World::GenerateRat()
     switch (rand2)
     {
     case 0:
-        rat.AddItem(Item("sword", "sword", 1, 3, 0));
+        //rat.AddItem(Item("sword", "sword", 1, 3, 0));
         break;
     case 1:
-        rat.AddItem(Item("greatsword", "sword", 2, 5, 0));
+        //rat.AddItem(Item("greatsword", "sword", 2, 5, 0));
         break;
     case 2:
-        rat.AddItem(Item("helm", "helm", 2, 0, 0));
+        //rat.AddItem(Item("helm", "helm", 2, 0, 0));
         break;
     case 3:
-        rat.AddItem(Item("shield", "shield", 4, 1, 0));
+        //rat.AddItem(Item("shield", "shield", 4, 1, 0));
         break;
     default:
 
@@ -99,7 +99,7 @@ void World::OnDescend()
 void World::AddLootDrop(Item item, int x, int y)
 {
 
-    Drops.push_back(LootDrop(item, x, y));
+    //Drops.push_back(LootDrop(item, x, y));
 }
 
 TileSet *World::GetTileSet()
@@ -204,10 +204,10 @@ void World::OnRender(GameWindow &renderer)
 
     DrawTilemap(renderer);
     DrawDeadEntities(renderer);
-    for (auto drop : Drops)
+    /*for (auto drop : Drops)
     {
         renderer.DrawSprite(*p_spriteSheet, drop.item.SpriteName, drop.X, drop.Y);
-    }
+    }*/
     DrawAliveEntities(renderer);
 }
 

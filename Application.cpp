@@ -3,9 +3,10 @@
 #include "World/Tilemap.h"
 #include <iostream>
 
-Application::Application(const AppConfig &config)
-    : p_appConfig(config), p_gameWindow(config.widthInTiles, config.heightInTiles, config.tileSize * config.scale)
+Application::Application(AppConfig &config)
+    : p_appConfig(config), p_gameWindow(1, 1, config)
 {
+    // std::cout<<(int)config.width<<" "<<(int)config.height<<" "<<(int)config.tileSize<<"\n";
 }
 
 Application::~Application()
@@ -15,9 +16,18 @@ Application::~Application()
 void Application::Loop()
 {
     float deltaTime = GetFrameTime();
-
+    if(IsWindowResized()){
+        OnWindowResize();
+    }
     OnUpdate(deltaTime);
     OnRender();
+}
+
+void Application::OnWindowResize(){
+    p_gameWindow.OnWindowResize();
+    p_appConfig.height = GetScreenHeight();
+    p_appConfig.width = GetScreenWidth();
+    p_world.Camera.offset = {(float)(p_gameWindow.GetWidthInPixels() / 2), (float)(p_gameWindow.GetHeightInPixels() / 2)};
 }
 
 void Application::Run()
@@ -26,8 +36,8 @@ void Application::Run()
     int cameraX = 1;
     int cameraY = 1;
 
-    InitWindow(800,
-               600, p_appConfig.name.c_str());
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+    InitWindow(p_appConfig.width, p_appConfig.height, p_appConfig.name.c_str());
     SetTargetFPS(144);
     SetExitKey(0);
 
@@ -51,22 +61,23 @@ void Application::Run()
     p_spriteSheet->AddSprite("greatsword", {0, 3, 1, 1});
     p_spriteSheet->AddSprite("helm", {0, 1, 1, 1});
     p_spriteSheet->AddSprite("shield", {4, 1, 1, 1});
-    
-   
 
     p_world.Init(20, 20, &p_worldTileSet, p_spriteSheet);
 
     currentItemInv = 0;
 
+    p_gameWindow = GameWindow(1, 1, p_appConfig);
+
     p_gameWindow.Init();
 
     p_world.Camera = {{(float)(p_gameWindow.GetWidthInPixels() / 2), (float)(p_gameWindow.GetHeightInPixels() / 2)},
-                      (float)(cameraX * 16 * p_appConfig.scale),
-                      (float)(cameraY * 16 * p_appConfig.scale),
+                      (float)(cameraX * 16),
+                      (float)(cameraY * 16),
                       0,
-                      1};  
+                      1};
 
     p_world.OnMoveCameraToPlayer();
+    p_world.Camera.zoom = 3;
 
     while (!WindowShouldClose())
     {
@@ -91,7 +102,6 @@ void Application::OnRender()
     p_gameWindow.EndMode();
 
     p_gameWindow.Render(0, 0, 1);
-    
 }
 
 void Application::DrawInGameUI()
@@ -101,8 +111,7 @@ void Application::DrawInGameUI()
         return;
     if (p_world.GetIsItPlayerMove() == false)
     {
-        p_gameWindow.DrawSprite(*p_spriteSheet, "random", (p_appConfig.widthInTiles - 1),
-                                (p_appConfig.heightInTiles - 1));
+        p_gameWindow.DrawSprite(*p_spriteSheet, "random", (p_appConfig.width - 1), (p_appConfig.height - 1));
     }
 
     /*for (int i = 0; i < 4; i++)
@@ -118,16 +127,16 @@ void Application::DrawInGameUI()
         }
     }*/
 
-   /*
+    /*
 
-    int i = 0;
-    for (auto item : player->Inventory)
-    {
+     int i = 0;
+     for (auto item : player->Inventory)
+     {
 
-        p_gameWindow.DrawSprite(*p_spriteSheet, item.SpriteName, 0, 3 + (i));
-        i++;
-    }
-    */
+         p_gameWindow.DrawSprite(*p_spriteSheet, item.SpriteName, 0, 3 + (i));
+         i++;
+     }
+     */
     int barLength = 60;
 
     float healthPercentage = static_cast<float>(player->CurrentHP) / player->MaxHP;
@@ -145,7 +154,11 @@ void Application::DrawInGameUI()
 
 void Application::OnUpdate(float deltaTime)
 {
-    if(IsKeyPressed(KEY_R)){
+ 
+    p_gameWindow.HandleInput(deltaTime, p_world);
+
+    if (IsKeyPressed(KEY_R))
+    {
         p_world.Descend();
     }
     if (IsKeyPressed(KEY_I) && p_world.GetIsItPlayerMove())

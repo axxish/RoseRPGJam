@@ -7,6 +7,7 @@
 #include "Tileset.h"
 #include "DungeonGenerator.h"
 
+class GameWindow;
 
 class World
 {
@@ -65,7 +66,7 @@ class World
     std::vector<Entity *> Entities; // this stores pointers to allow polymorphism for Entity inheritors
     
     Camera2D Camera;
-
+ 
     bool isDragging = false;
     Vector2 pivotCamera;
 

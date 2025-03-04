@@ -69,7 +69,6 @@ void World::Init(uint16_t worldWidth, uint16_t worldHeight, TileSet *worldTileSe
     // p_currentLevel = Tilemap(worldWidth, worldHeight);
     // p_currentLevel.tiles = testWorld;
 
-
     gen1 = std::make_shared<DungeonGenerator>(worldHeight, worldWidth);
     gen1->Generate(4, 8);
     std::pair<int, int> rand;
@@ -86,8 +85,8 @@ void World::Init(uint16_t worldWidth, uint16_t worldHeight, TileSet *worldTileSe
 
 void World::OnMoveCameraToPlayer()
 {
-    Camera.target.x = Entities[0]->X * 16 * 3;
-    Camera.target.y = Entities[0]->Y * 16 * 3;
+    Camera.target.x = Entities[0]->X * 16;
+    Camera.target.y = Entities[0]->Y * 16;
 }
 
 void World::OnDescend()
@@ -172,10 +171,10 @@ void World::DrawAliveEntities(GameWindow &renderer)
             // DrawText(std::to_string(i->CurrentHP).c_str(), i->X * 16 * 3, i->Y * 16 * 3, 12, RED);
             float healthPercentage = static_cast<float>(i->CurrentHP) / i->MaxHP;
             int greenBarWidth = static_cast<int>(healthPercentage * (11));
-            DrawRectangle((i->X * 16 * 3) + 8, (i->Y * 16 * 3) - 4, 11 * 3, 2, RED);
-            DrawRectangle((i->X * 16 * 3) + 8, (i->Y * 16 * 3) - 4, greenBarWidth * 3, 2, GREEN);
-            DrawText(std::to_string(i->Lvl).c_str(), (i->X * 16 * 3), (i->Y * 16 * 3) - 8, 12, YELLOW);
-            DrawText(i->Name.c_str(), (i->X * 16 * 3) + 4, (i->Y * 16 * 3) - 16, 12, YELLOW);
+            DrawRectangle((i->X * 16 ) + 8, (i->Y * 16 ) - 4, 11 * 3, 2, RED);
+            DrawRectangle((i->X * 16 ) + 8, (i->Y * 16) - 4, greenBarWidth * 3, 2, GREEN);
+            DrawText(std::to_string(i->Lvl).c_str(), (i->X * 16), (i->Y * 16) - 8, 12, YELLOW);
+            DrawText(i->Name.c_str(), (i->X * 16) + 4, (i->Y * 16) - 16, 12, YELLOW);
         }
     }
 }
@@ -211,35 +210,10 @@ void World::OnRender(GameWindow &renderer)
     DrawAliveEntities(renderer);
 }
 
+
+
 void World::OnUpdate(float deltaTime)
 {
-
-    if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE))
-    {
-        if (!isDragging)
-        {
-            pivotCamera = GetMousePosition();
-            isDragging = true;
-        }
-
-        if (isDragging)
-        {
-            auto newX = pivotCamera.x - GetMousePosition().x;
-            auto newY = pivotCamera.y - GetMousePosition().y;
-            newX = newX;
-            newY = newY;
-            Camera.target.x += newX;
-            Camera.target.y += newY;
-            pivotCamera = GetMousePosition();
-        }
-        // auto delta = GetMouseDelta();
-        // p_camera.target.x -= delta.x;
-        // p_camera.target.y -= delta.y;
-    }
-    else
-    {
-        isDragging = false;
-    }
 
     for (Entity *e : Entities)
     {

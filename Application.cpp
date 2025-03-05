@@ -66,7 +66,7 @@ void Application::Run()
 
     currentItemInv = 0;
 
-    p_gameWindow = GameWindow(1, 1, p_appConfig);
+    p_gameWindow = GameWindow(1, (3.0f/4), p_appConfig);
 
     p_gameWindow.Init();
 

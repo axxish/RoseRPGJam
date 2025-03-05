@@ -1,24 +1,20 @@
 #include "GameWindow.h"
 #include <iostream>
 
-GameWindow::GameWindow(float normalizedWidth, float normalizedHeight, AppConfig& appConfig) : p_normalizedWidth(normalizedWidth), 
-p_normalizedHeight(normalizedHeight)
+GameWindow::GameWindow(float normalizedWidth, float normalizedHeight, AppConfig& appConfig)
+    : Gadget(0, 0, normalizedWidth, normalizedHeight, std::make_shared<AppConfig>(appConfig)), p_tileSize(appConfig.tileSize)
 {
-    p_appConfig = std::make_shared<AppConfig>(appConfig); 
-    p_tileSize = p_appConfig->tileSize;
     UpdateDimensions();
-    p_mode = false;
-}
-
-
-void GameWindow::Init()
-{
-    p_renderTex = LoadRenderTexture(p_width, p_height);
 }
 
 GameWindow::~GameWindow()
 {
     UnloadRenderTexture(p_renderTex);
+}
+
+void GameWindow::Init()
+{
+    p_renderTex = LoadRenderTexture(p_width, p_height);
 }
 
 void GameWindow::Render(int x, int y, int scale)
@@ -36,7 +32,6 @@ void GameWindow::Render(int x, int y, int scale)
 void GameWindow::DrawBorder(Color color, int thickness)
 {
     DrawRectangleLines(0, 0, p_width, p_height, color);
-    //DrawRectangleLines(thickness, thickness, p_width - 2 * thickness, p_height - 2 * thickness, color);
 }
 
 void GameWindow::DrawSprite(const SpriteSheet &sheet, const std::string &name, int x, int y)
@@ -82,7 +77,6 @@ void GameWindow::DrawSpriteGray(const SpriteSheet &sheet, const std::string &nam
 void GameWindow::BeginMode()
 {
     p_mode = true;
-
     BeginTextureMode(p_renderTex);
     ClearBackground(BLACK);
 }
@@ -95,35 +89,33 @@ void GameWindow::EndMode()
 
 void GameWindow::HandleInput(float deltaTime, World &world)
 {
-    // Check if the mouse is over the game window
     Vector2 mousePosition = GetMousePosition();
     bool inWindow = mousePosition.x >= 0 && mousePosition.x < p_width && mousePosition.y >= 0 && mousePosition.y < p_height;
     if (inWindow)
     {
-        // Handle camera zoom with middle scroll
         float zoomChange = GetMouseWheelMove();
         if (zoomChange != 0)
         {
-            world.Camera.zoom += zoomChange * p_appConfig->zoomSensitivity * deltaTime * 60; // Adjust the zoom sensitivity as needed
+            world.Camera.zoom += zoomChange * p_appConfig->zoomSensitivity * deltaTime * 60;
             if (world.Camera.zoom < p_appConfig->minZoom)
-                world.Camera.zoom = p_appConfig->minZoom; // Minimum zoom level
+                world.Camera.zoom = p_appConfig->minZoom;
             if (world.Camera.zoom > p_appConfig->maxZoom)
-                world.Camera.zoom = p_appConfig->maxZoom; // Maximum zoom level
+                world.Camera.zoom = p_appConfig->maxZoom;
         }
     }
 
-    if(IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE))
+    if (IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE))
     {
         if (!world.isDragging)
         {
             world.pivotCamera = mousePosition;
-            if (inWindow) world.isDragging = true;
+            if (inWindow)
+                world.isDragging = true;
         }
     }
 
     if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE))
     {
-        
         if (world.isDragging)
         {
             Vector2 newMousePosition = mousePosition;
@@ -140,24 +132,9 @@ void GameWindow::HandleInput(float deltaTime, World &world)
     }
 }
 
-void GameWindow::OnWindowResize()
-{
-    UpdateDimensions();
-    UnloadRenderTexture(p_renderTex);
-    p_renderTex = LoadRenderTexture(p_width, p_height);
-}
-
 void GameWindow::UpdateDimensions()
 {
     p_width = static_cast<uint16_t>(GetScreenWidth() * p_normalizedWidth);
     p_height = static_cast<uint16_t>(GetScreenHeight() * p_normalizedHeight);
 }
 
-uint32_t GameWindow::GetWidthInPixels()
-{
-    return p_renderTex.texture.width;
-}
-uint32_t GameWindow::GetHeightInPixels()
-{
-    return p_renderTex.texture.height;
-}

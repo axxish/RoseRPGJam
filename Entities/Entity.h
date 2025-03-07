@@ -7,7 +7,7 @@ class World;
 struct Entity
 {
 
-    Entity(const std::string &name, const std::string &spriteName, int vigour, int wrath, int insight, int x, int y,
+    Entity(const std::string &name, const std::string &spriteName, int vigour, int wrath, int x, int y,
            World *worldRef);
     virtual bool DoTurn()
     {
@@ -49,14 +49,10 @@ struct Entity
     // attributes everything else scales off
     int Vigour;  // hp
     int Wrath;   // dmg
-    int Insight; // mana and spell dmg
 
     int MaxHP;
     int CurrentHP;
     int Damage;
-    int MaxMana;
-    int CurrentMana;
-
     int X;
     int Y;
 
@@ -77,7 +73,7 @@ struct Entity
 
 struct Player : public Entity
 {
-    Player(const std::string &name, int x, int y, World *worldRef) : Entity(name, "hero", 4, 5, 3, x, y, worldRef)
+    Player(const std::string &name, int x, int y, World *worldRef) : Entity(name, "hero", 4, 5, x, y, worldRef)
     {
         isPlayer = true;
     }
@@ -89,7 +85,7 @@ struct Player : public Entity
 
 struct Door : public Entity
 {
-    Door(int x, int y, World *worldRef) : Entity("Door", "door", 4, 5, 3, x, y, worldRef)
+    Door(int x, int y, World *worldRef) : Entity("Door", "door", 4, 5, x, y, worldRef)
     {
         isMob = false;
         isSolid = false;
@@ -100,7 +96,7 @@ struct Door : public Entity
 
 struct Heal : public Entity
 {
-    Heal(int x, int y, World *worldRef) : Entity("heal", "heal", 4, 5, 3, x, y, worldRef)
+    Heal(int x, int y, World *worldRef) : Entity("heal", "heal", 4, 5, x, y, worldRef)
     {
         isMob = false;
         isSolid = false;

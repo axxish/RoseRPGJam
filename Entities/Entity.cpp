@@ -3,9 +3,9 @@
 #include <algorithm>
 #include <iostream>
 #include <random>
-Entity::Entity(const std::string &name, const std::string &spriteName, int vigour, int wrath, int insight, int x, int y,
+Entity::Entity(const std::string &name, const std::string &spriteName, int vigour, int wrath, int x, int y,
                World *worldRef)
-    : Vigour(vigour), Wrath(wrath), Insight(insight)
+    : Vigour(vigour), Wrath(wrath)
 {
     //Inventory.reserve(4);
     Name = name;
@@ -18,7 +18,7 @@ Entity::Entity(const std::string &name, const std::string &spriteName, int vigou
     XpBounty = 30;
     CalculateDerivedStats();
     CurrentHP = MaxHP;
-    CurrentMana = MaxMana;
+
 }
 
 void Entity::OnUpdate(float deltaTime)
@@ -75,17 +75,14 @@ void Entity::CalculateDerivedStats()
 {
 
     int oldMaxHP = MaxHP;
-    int oldMaxMana = MaxMana;
     MaxHP = Vigour * 10;
 
     Damage = Wrath * 2;
-    MaxMana = Insight * 5;
+
 
     // Adjust current health/mana proportionally to the new max values
     CurrentHP = std::min(MaxHP, CurrentHP * MaxHP / oldMaxHP);
-    CurrentMana = std::min(MaxMana, CurrentMana * MaxMana / oldMaxMana);
 }
-
 void Entity::GainXP(int amount)
 {
     XP += amount;
@@ -101,7 +98,7 @@ void Entity::LvlUp()
     Lvl++;
     Vigour++; // Example level-up bonuses
     Wrath++;
-    Insight++;
+
     CalculateDerivedStats(); // Recalculate derived stats after leveling up
 }
 
@@ -297,4 +294,4 @@ bool Player::DoTurn()
 
 void Player::OnUpdate(float deltaTime){
     //do nuthin
-}
+}   

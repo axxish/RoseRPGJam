@@ -61,12 +61,12 @@ void Application::Run()
     p_spriteSheet->AddSprite("greatsword", {0, 3, 1, 1});
     p_spriteSheet->AddSprite("helm", {0, 1, 1, 1});
     p_spriteSheet->AddSprite("shield", {4, 1, 1, 1});
-
+    
     p_world.Init(20, 20, &p_worldTileSet, p_spriteSheet);
 
     currentItemInv = 0;
 
-    p_gameWindow = GameWindow(1, (3.0f/4), p_appConfig);
+    p_gameWindow = GameWindow(p_appConfig.gameToRightMenuRatio, p_appConfig.gameToBottomMenuRatio, p_appConfig);
 
     p_gameWindow.Init();
 
@@ -140,11 +140,10 @@ void Application::DrawInGameUI()
     int barLength = 60;
 
     float healthPercentage = static_cast<float>(player->CurrentHP) / player->MaxHP;
-    float manaPercentage = static_cast<float>(player->CurrentMana) / player->MaxMana;
+
     DrawRectangle(0, 0, barLength * 3, 8, GRAY);
     DrawRectangle(0, 0, barLength * 3, 8, GRAY);
     DrawRectangle(0, 0, healthPercentage * barLength * 3, 8, RED);
-    DrawRectangle(0, 8, manaPercentage * barLength * 3, 8, BLUE);
     std::string lvlText = "LVL: ";
 
     lvlText += std::to_string(player->Lvl);

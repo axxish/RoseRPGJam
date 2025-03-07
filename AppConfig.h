@@ -12,5 +12,6 @@ struct AppConfig
     float minZoom = 0.5f;
     float maxZoom = 4.0f;
     float zoomSensitivity = 0.2f;
-
+    float gameToRightMenuRatio = 0.75f;
+    float gameToBottomMenuRatio = 0.8f;
 };

@@ -294,4 +294,4 @@ bool Player::DoTurn()
 
 void Player::OnUpdate(float deltaTime){
     //do nuthin
-}   
+}

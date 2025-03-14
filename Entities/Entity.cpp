@@ -1,13 +1,15 @@
 #include "Entity.h"
-#include "../World/World.h"
+
 #include <algorithm>
 #include <iostream>
 #include <random>
-Entity::Entity(const std::string &name, const std::string &spriteName, int vigour, int wrath, int x, int y,
-               World *worldRef)
+
+#include "../World/World.h"
+Entity::Entity(const std::string &name, const std::string &spriteName, int vigour, int wrath,
+               int x, int y, World *worldRef)
     : Vigour(vigour), Wrath(wrath)
 {
-    //Inventory.reserve(4);
+    // Inventory.reserve(4);
     Name = name;
     SpriteName = spriteName;
     X = x;
@@ -19,6 +21,18 @@ Entity::Entity(const std::string &name, const std::string &spriteName, int vigou
     CalculateDerivedStats();
     CurrentHP = MaxHP;
 
+    tags["XP"] = TagValue(0);
+    tags["XP"].makeDisplayable();
+    tags["Lvl"] = TagValue(1);
+    tags["Lvl"].makeDisplayable();
+    tags["HP"] = TagValue(CappedValue(100, 100));
+    tags["HP"].makeDisplayable();
+    tags["AGI"] = TagValue(1);
+    tags["AGI"].makeDisplayable();
+    tags["STR"] = TagValue(1);
+    tags["STR"].makeDisplayable();
+    tags["INT"] = TagValue(1);
+    tags["INT"].makeDisplayable();
 }
 
 void Entity::OnUpdate(float deltaTime)
@@ -31,7 +45,6 @@ void Entity::OnUpdate(float deltaTime)
 
 bool Entity::AddItem(const Item &item)
 {
-
     /*if (Inventory.size() < inv_size)
     {
         Inventory.push_back(item);
@@ -65,7 +78,7 @@ void Entity::DropItem(int num)
 {
     /*
     if(num >= Inventory.size() ) return;
-    WorldRef->AddLootDrop(Inventory.at(num), X, Y); 
+    WorldRef->AddLootDrop(Inventory.at(num), X, Y);
     RemoveItem(num);
     turnSkip = true;
     */
@@ -73,12 +86,10 @@ void Entity::DropItem(int num)
 
 void Entity::CalculateDerivedStats()
 {
-
     int oldMaxHP = MaxHP;
     MaxHP = Vigour * 10;
 
     Damage = Wrath * 2;
-
 
     // Adjust current health/mana proportionally to the new max values
     CurrentHP = std::min(MaxHP, CurrentHP * MaxHP / oldMaxHP);
@@ -94,12 +105,11 @@ void Entity::GainXP(int amount)
 
 void Entity::LvlUp()
 {
-
     Lvl++;
-    Vigour++; // Example level-up bonuses
+    Vigour++;  // Example level-up bonuses
     Wrath++;
 
-    CalculateDerivedStats(); // Recalculate derived stats after leveling up
+    CalculateDerivedStats();  // Recalculate derived stats after leveling up
 }
 
 int Entity::GetXPForNextLevel() const
@@ -109,20 +119,18 @@ int Entity::GetXPForNextLevel() const
 
 Entity *Entity::IsOccupied(int x, int y)
 {
-
     for (Entity *entity : WorldRef->Entities)
     {
         // std::cout << entity->Name << " " << entity->X << " " << entity->Y << "\n";
 
         if (entity->X == x && entity->Y == y)
-            return entity; // Tile is occupied
+            return entity;  // Tile is occupied
     }
     return nullptr;
 }
 
 void Entity::Move(int x, int y)
 {
-
     X = x;
     Y = y;
 }
@@ -134,7 +142,7 @@ void Entity::Attack(Entity *target)
         target->ReceiveDamage(Damage);
         if (target->isDead)
         {
-            std::cout<<"target dead\n";
+            std::cout << "target dead\n";
             this->GainXP(target->XpBounty);
             std::cout << this->XP << " " << this->GetXPForNextLevel();
             this->XpBounty += target->XpBounty;
@@ -165,7 +173,6 @@ void Entity::AttemptMove(int dx, int dy)
 
     int newTile = tilemap->tiles[newY * WorldRef->GetWidth() + newX];
 
-
     if (tileset[newTile].isSolid())
     {
         return;
@@ -180,12 +187,14 @@ void Entity::AttemptMove(int dx, int dy)
             Move(newX, newY);
             return;
         }
-        if(possibleOccupant->isDoor == true && this->isPlayer == true){
+        if (possibleOccupant->isDoor == true && this->isPlayer == true)
+        {
             Move(newX, newY);
-            //WorldRef->Descend();
+            // WorldRef->Descend();
             return;
         }
-        if(possibleOccupant->isHeal == true && !this->isDead && this->isPlayer == true){
+        if (possibleOccupant->isHeal == true && !this->isDead && this->isPlayer == true)
+        {
             WorldRef->Entities[0]->CurrentHP = WorldRef->Entities[0]->MaxHP;
             possibleOccupant->Die();
         }
@@ -275,8 +284,10 @@ bool Player::DoTurn()
             }
         }
         */
-        for(auto entity : Entities){
-            if(entity->isDoor == true && entity->X == X && entity->Y == Y){
+        for (auto entity : Entities)
+        {
+            if (entity->isDoor == true && entity->X == X && entity->Y == Y)
+            {
                 WorldRef->Descend();
                 EventManager::Instance().Publish(i);
                 return true;
@@ -292,6 +303,7 @@ bool Player::DoTurn()
     // Handle player input or turn-based actions here
 }
 
-void Player::OnUpdate(float deltaTime){
-    //do nuthin
+void Player::OnUpdate(float deltaTime)
+{
+    // do nuthin
 }

@@ -10,8 +10,9 @@ struct AppConfig
     uint16_t height = 600;
     uint16_t tileSize = 16;
     float minZoom = 0.5f;
-    float maxZoom = 4.0f;
+    float maxZoom = 10.0f;
     float zoomSensitivity = 0.2f;
-    float gameToRightMenuRatio = 0.75f;
+    float gameToRightMenuRatio = 0.65f;
     float gameToBottomMenuRatio = 0.8f;
+    float statsToInventoryRatio = 0.5f;
 };

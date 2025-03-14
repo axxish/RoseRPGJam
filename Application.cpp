@@ -4,7 +4,7 @@
 #include <iostream>
 
 Application::Application(AppConfig &config)
-    : p_appConfig(config), p_gameWindow(1, 1, config)
+    : p_appConfig(config), p_gameWindow(1, 1, std::make_shared<AppConfig>(config))
 {
     // std::cout<<(int)config.width<<" "<<(int)config.height<<" "<<(int)config.tileSize<<"\n";
 }
@@ -25,6 +25,8 @@ void Application::Loop()
 
 void Application::OnWindowResize(){
     p_gameWindow.OnWindowResize();
+   
+    p_entityStatsGadget->OnWindowResize();
     p_appConfig.height = GetScreenHeight();
     p_appConfig.width = GetScreenWidth();
     p_world.Camera.offset = {(float)(p_gameWindow.GetWidthInPixels() / 2), (float)(p_gameWindow.GetHeightInPixels() / 2)};
@@ -41,10 +43,10 @@ void Application::Run()
     SetTargetFPS(144);
     SetExitKey(0);
 
-    p_spriteSheet = std::make_shared<SpriteSheet>("resources/textures.png", p_appConfig.tileSize);
+    p_spriteSheet = std::make_shared<SpriteSheet>("resources/textures.png", 16);
     p_spriteSheet->AddSprite("random", {4, 0, 1, 1});
 
-    p_worldTileSet = TileSet(p_spriteSheet, p_appConfig.tileSize);
+    p_worldTileSet = TileSet(p_spriteSheet, 16);
     p_worldTileSet.addTileType("air", {0, 0, 1, 1}, false);
     p_worldTileSet.addTileType("floor", {2, 0, 1, 1}, false);
     p_worldTileSet.addTileType("wall", {1, 0, 1, 1}, true);
@@ -66,9 +68,16 @@ void Application::Run()
 
     currentItemInv = 0;
 
-    p_gameWindow = GameWindow(p_appConfig.gameToRightMenuRatio, p_appConfig.gameToBottomMenuRatio, p_appConfig);
+    p_gameWindow = GameWindow(p_appConfig.gameToRightMenuRatio, p_appConfig.gameToBottomMenuRatio, std::make_shared<AppConfig>(p_appConfig));
 
+    p_entityStatsGadget = std::make_unique<EntityStatsGadget>(
+        EntityStatsGadget(p_appConfig.gameToRightMenuRatio, 0, 
+            (double)1 - p_appConfig.gameToRightMenuRatio, p_appConfig.statsToInventoryRatio, 
+            std::make_shared<AppConfig>(p_appConfig)));
+
+    
     p_gameWindow.Init();
+    p_entityStatsGadget->Init();
 
     p_world.Camera = {{(float)(p_gameWindow.GetWidthInPixels() / 2), (float)(p_gameWindow.GetHeightInPixels() / 2)},
                       (float)(cameraX * 16),
@@ -90,6 +99,7 @@ void Application::Run()
 void Application::OnRender()
 {
 
+
     p_gameWindow.BeginMode();
     BeginMode2D(p_world.Camera);
 
@@ -101,11 +111,18 @@ void Application::OnRender()
 
     p_gameWindow.EndMode();
 
-    p_gameWindow.Render(0, 0, 1);
+
+    p_entityStatsGadget->DrawStats(*p_world.Entities[0]);
+    BeginDrawing();
+    ClearBackground(BLACK);
+    
+    p_gameWindow.Render(1);
+    if(p_entityStatsGadget)p_entityStatsGadget->Render(1);
+    EndDrawing();
 }
 
 void Application::DrawInGameUI()
-{
+{   
     auto player = p_world.Entities[0];
     if (!player)
         return;
@@ -114,29 +131,6 @@ void Application::DrawInGameUI()
         p_gameWindow.DrawSprite(*p_spriteSheet, "random", (p_appConfig.width - 1), (p_appConfig.height - 1));
     }
 
-    /*for (int i = 0; i < 4; i++)
-    {
-        DrawRectangle(2 * 3, (3 + i) * 16 * 3 + 1 * 3, 12 * 3, 12 * 3, GRAY);
-        if (inventoryOpen && (i == currentItemInv))
-        {
-            DrawRectangle(2 * 3, (3 + i) * 16 * 3 + 1 * 3, 12 * 3, 12 * 3, RED);
-            if ((i < player->Inventory.size()))
-            {
-                DrawText("Q - DROP", 16 * 3, (3 + i) * 16 * 3, 12, WHITE);
-            }
-        }
-    }*/
-
-    /*
-
-     int i = 0;
-     for (auto item : player->Inventory)
-     {
-
-         p_gameWindow.DrawSprite(*p_spriteSheet, item.SpriteName, 0, 3 + (i));
-         i++;
-     }
-     */
     int barLength = 60;
 
     float healthPercentage = static_cast<float>(player->CurrentHP) / player->MaxHP;

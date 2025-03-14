@@ -26,7 +26,7 @@ add_executable(RoseRPG
                     World/Tilemap.cpp World/TileSet.cpp World/World.cpp 
                     Entities/Entity.cpp Entities/Rat.cpp 
                     Events/EventManager.cpp Util/Random.cpp
-                    Graphics/Gadget.cpp)
+                    Graphics/Gadget.cpp Graphics/EntityStats.cpp)
 
 target_link_libraries(RoseRPG 
     raylib

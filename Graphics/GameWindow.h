@@ -7,11 +7,11 @@
 class GameWindow : public Gadget
 {
 public:
-    GameWindow(float normalizedWidth, float normalizedHeight, AppConfig& appConfig);
+    GameWindow(float normalizedWidth, float normalizedHeight, std::shared_ptr<AppConfig> appConfig);
     ~GameWindow();
 
     void Init() override;
-    void Render(int x, int y, int scale) override;
+    void Render(int scale) override;
 
     void DrawBorder(Color color, int thickness);
     void DrawSprite(const SpriteSheet &sheet, const std::string &name, int x, int y);

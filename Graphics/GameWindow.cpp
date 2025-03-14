@@ -1,9 +1,10 @@
 #include "GameWindow.h"
 #include <iostream>
 
-GameWindow::GameWindow(float normalizedWidth, float normalizedHeight, AppConfig& appConfig)
-    : Gadget(0, 0, normalizedWidth, normalizedHeight, std::make_shared<AppConfig>(appConfig)), p_tileSize(appConfig.tileSize)
+GameWindow::GameWindow(float normalizedWidth, float normalizedHeight, std::shared_ptr<AppConfig> appConfig)
+    : Gadget(0, 0, normalizedWidth, normalizedHeight, appConfig)
 {
+    p_tileSize = appConfig->tileSize;
     UpdateDimensions();
 }
 
@@ -17,16 +18,15 @@ void GameWindow::Init()
     p_renderTex = LoadRenderTexture(p_width, p_height);
 }
 
-void GameWindow::Render(int x, int y, int scale)
+void GameWindow::Render(int scale)
 {
-    BeginDrawing();
-    ClearBackground(BLACK);
+
     DrawTexturePro(
-        p_renderTex.texture, {0, 0, (float)p_renderTex.texture.width, (float)-p_renderTex.texture.height},
-        {(float)x, (float)y, (float)p_renderTex.texture.width * scale, (float)p_renderTex.texture.height * scale},
+        p_renderTex.texture, {(float)0, (float)0, (float)p_renderTex.texture.width, (float)-p_renderTex.texture.height},
+        {(float)p_x, (float)p_y, (float)p_renderTex.texture.width * scale, (float)p_renderTex.texture.height * scale},
         {0, 0}, 0, WHITE);
     DrawBorder(WHITE, 2);
-    EndDrawing();
+
 }
 
 void GameWindow::DrawBorder(Color color, int thickness)

@@ -1,0 +1,15 @@
+Language: Cpp
+BasedOnStyle: Google
+IndentWidth: 4
+UseTab: Never
+TabWidth: 4
+ColumnLimit: 99
+PointerAlignment: Right
+BreakBeforeBraces: Allman
+DerivePointerAlignment: true
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AllowShortBlocksOnASingleLine: false
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakTemplateDeclarations: true

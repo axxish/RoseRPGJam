@@ -11,8 +11,8 @@ public:
     Gadget(float normalizedX, float normalizedY, float normalizedWidth, float normalizedHeight, std::shared_ptr<AppConfig> appConfig);
     virtual ~Gadget();
 
-    virtual void Init() = 0;
-    virtual void Render(int x, int y, int scale) = 0;
+    virtual void Init();
+    virtual void Render(int scale);
     virtual void OnWindowResize();
 
     uint32_t GetWidthInPixels() const;
@@ -34,4 +34,5 @@ protected:
     float p_normalizedHeight;
 
     virtual void UpdateDimensions();
+    void DrawBorder(Color color, int thickness);
 };

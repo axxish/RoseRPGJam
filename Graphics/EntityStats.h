@@ -9,11 +9,19 @@ class EntityStatsGadget : public Gadget
 public:
     EntityStatsGadget(float normalizedX, float normalizedY, float normalizedWidth, float normalizedHeight, std::shared_ptr<AppConfig> appConfig);
     ~EntityStatsGadget();
-
+    void DrawStats(const Entity& entity);
     void Init() override;
-    void Render(int x, int y, int scale) override;
+    void Render(int scale) override;
+    void UpdateDimensions() override;
+    void OnWindowResize() override;
+
+    //void Init() override;
+    //void Render(int x, int y, int scale) override;
 
 private:
-    void UpdateStats(const Entity& entity);
+    
+
+    std::shared_ptr<AppConfig> p_appConfig;
+   RenderTexture2D p_renderTex;
     
 };

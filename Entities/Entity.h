@@ -2,6 +2,7 @@
 #pragma once
 #include "../Graphics/SpriteSheet.h"
 #include "../Items/Item.h"
+#include "Tag.h"
 class World;
 
 
@@ -48,6 +49,9 @@ struct Entity
     int XpBounty;
 
     // attributes everything else scales off
+    
+    std::unordered_map<std::string, TagValue> tags;
+
     int Vigour;  // hp
     int Wrath;   // dmg
 
@@ -76,7 +80,8 @@ struct Player : public Entity
 {
     Player(const std::string &name, int x, int y, World *worldRef) : Entity(name, "hero", 4, 5, x, y, worldRef)
     {
-        isPlayer = true;
+        isPlayer = true;    
+        
     }
 
     bool DoTurn() override;

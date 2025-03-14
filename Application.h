@@ -1,5 +1,6 @@
 #pragma once
 #include "Graphics/GameWindow.h"
+#include "Graphics/EntityStats.h"
 #include "World/TileSet.h"
 #include "World/Tilemap.h"
 #include "World/World.h"
@@ -28,6 +29,7 @@ class Application
 
     AppConfig& p_appConfig;
     GameWindow p_gameWindow;
+    std::unique_ptr<EntityStatsGadget> p_entityStatsGadget;
 
     TileSet p_worldTileSet;
     std::shared_ptr<SpriteSheet> p_spriteSheet;

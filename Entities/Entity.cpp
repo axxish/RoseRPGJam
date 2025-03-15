@@ -152,7 +152,10 @@ void Entity::Attack(Entity *target)
 
 void Entity::ReceiveDamage(int dmg)
 {
+    int CurrentHP = tags["HP"].get<CappedValue<int>>().get();
+    std::cout << tags["HP"].get<CappedValue<int>>().get();
     CurrentHP -= dmg;
+    tags["HP"].value = CappedValue<int>(CurrentHP, tags["HP"].get<CappedValue<int>>().getMax());
     if (CurrentHP <= 0)
     {
         Die();

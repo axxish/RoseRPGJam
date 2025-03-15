@@ -165,14 +165,10 @@ void World::DrawAliveEntities(GameWindow &renderer)
 
     for (int z = 1; z < Entities.size(); z++)
     {
-        auto i = Entities[z];
+        auto i = Entities[z];   
         if (i->isMob)
         {
-            // DrawText(std::to_string(i->CurrentHP).c_str(), i->X * 16 * 3, i->Y * 16 * 3, 12, RED);
-            float healthPercentage = static_cast<float>(i->CurrentHP) / i->MaxHP;
-            int greenBarWidth = static_cast<int>(healthPercentage * (11));
-            DrawRectangle((i->X * 16 ) + 8, (i->Y * 16 ) - 4, 11 * 3, 2, RED);
-            DrawRectangle((i->X * 16 ) + 8, (i->Y * 16) - 4, greenBarWidth * 3, 2, GREEN);
+            
             DrawText(std::to_string(i->Lvl).c_str(), (i->X * 16), (i->Y * 16) - 8, 12, YELLOW);
             DrawText(i->Name.c_str(), (i->X * 16) + 4, (i->Y * 16) - 16, 12, YELLOW);
         }

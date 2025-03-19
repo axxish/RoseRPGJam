@@ -1,19 +1,19 @@
-#include "Application.h"
+#include "Campaign.h"
 #include "Graphics/SpriteSheet.h"
 #include "World/Tilemap.h"
 #include <iostream>
 
-Application::Application(AppConfig &config)
+Campaign::Campaign(AppConfig &config)
     : p_appConfig(config), p_gameWindow(1, 1, std::make_shared<AppConfig>(config))
 {
     // std::cout<<(int)config.width<<" "<<(int)config.height<<" "<<(int)config.tileSize<<"\n";
 }
 
-Application::~Application()
+Campaign::~Campaign()
 {
 }
 
-void Application::Loop()
+void Campaign::Loop()
 {
     float deltaTime = GetFrameTime();
     if(IsWindowResized()){
@@ -23,7 +23,7 @@ void Application::Loop()
     OnRender();
 }
 
-void Application::OnWindowResize(){
+void Campaign::OnWindowResize(){
     p_gameWindow.OnWindowResize();
    
     p_entityStatsGadget->OnWindowResize();
@@ -32,7 +32,7 @@ void Application::OnWindowResize(){
     p_world.Camera.offset = {(float)(p_gameWindow.GetWidthInPixels() / 2), (float)(p_gameWindow.GetHeightInPixels() / 2)};
 }
 
-void Application::Run()
+void Campaign::Run()
 {
     std::srand(std::time(nullptr));
     int cameraX = 1;
@@ -96,7 +96,7 @@ void Application::Run()
     CloseWindow();
 }
 
-void Application::OnRender()
+void Campaign::OnRender()
 {
 
 
@@ -121,7 +121,7 @@ void Application::OnRender()
     EndDrawing();
 }
 
-void Application::DrawInGameUI()
+void Campaign::DrawInGameUI()
 {   
     auto player = p_world.Entities[0];
     if (!player)
@@ -145,7 +145,7 @@ void Application::DrawInGameUI()
     DrawText(lvlText.c_str(), 0, 16, 16, YELLOW);
 }
 
-void Application::OnUpdate(float deltaTime)
+void Campaign::OnUpdate(float deltaTime)
 {
  
     p_gameWindow.HandleInput(deltaTime, p_world);

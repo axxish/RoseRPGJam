@@ -36,4 +36,9 @@ set_property(TARGET RoseRPG PROPERTY CXX_STANDARD 17)
 
 target_include_directories(RoseRPG PUBLIC "${raylib_SOURCE_DIR}/src")
 
-install(DIRECTORY resources/ DESTINATION "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/resources")
+# Custom command to copy resources at build time
+add_custom_command(
+    TARGET RoseRPG POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${CMAKE_SOURCE_DIR}/resources" "$<TARGET_FILE_DIR:RoseRPG>/resources"
+)

@@ -6,11 +6,11 @@
 #include "World/World.h"
 #include "AppConfig.h"
 
-class Application
+class Campaign
 {
   public:
-    Application(AppConfig &config = AppConfig());
-    ~Application();
+    Campaign(AppConfig &config = AppConfig());
+    ~Campaign();
 
     void Run();
     void OnWindowResize();

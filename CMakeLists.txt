@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.27.7)
-project(RoseRPG VERSION 0.1.0 LANGUAGES C CXX)
+project(RoseRPG VERSION 0.1.1 LANGUAGES C CXX)
 
 # Generate compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -8,7 +8,7 @@ find_package(raylib 5.0 QUIET)
 
 # This code downloads raylib into a directory called _deps and adds it as a subdirectory, compiling it with the program when running the build command
 include(FetchContent)
-if (NOT raylib_FOUND)
+if(NOT raylib_FOUND)
     FetchContent_Declare(
         raylib
         URL https://github.com/raysan5/raylib/archive/refs/tags/5.0.tar.gz
@@ -20,15 +20,15 @@ endif()
 set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
 
-add_executable(RoseRPG 
-                    main.cpp Application.cpp
-                    Graphics/GameWindow.cpp Graphics/SpriteSheet.cpp 
-                    World/Tilemap.cpp World/TileSet.cpp World/World.cpp 
-                    Entities/Entity.cpp Entities/Rat.cpp 
-                    Events/EventManager.cpp Util/Random.cpp
-                    Graphics/Gadget.cpp Graphics/EntityStats.cpp)
+file(GLOB_RECURSE SOURCES "src/*.cpp")
+file(GLOB_RECURSE HEADERS "src/*.h")
 
-target_link_libraries(RoseRPG 
+add_executable(RoseRPG
+    ${SOURCES}
+    ${HEADERS}
+)
+
+target_link_libraries(RoseRPG
     raylib
 )
 
@@ -36,6 +36,4 @@ set_property(TARGET RoseRPG PROPERTY CXX_STANDARD 17)
 
 target_include_directories(RoseRPG PUBLIC "${raylib_SOURCE_DIR}/src")
 
-FILE(COPY resources/creatures.png DESTINATION "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/resources")
-FILE(COPY resources/maptiles.png DESTINATION "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/resources")
-FILE(COPY resources/iconsui.png DESTINATION "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/resources")
+install(DIRECTORY resources/ DESTINATION "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/resources")

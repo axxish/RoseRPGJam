@@ -19,16 +19,50 @@ endif()
 
 set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
-
-file(GLOB_RECURSE SOURCES "src/*.cpp")
-file(GLOB_RECURSE HEADERS "src/*.h")
-
-add_executable(RoseRPG
-    ${SOURCES}
-    ${HEADERS}
+# Manually list source files
+set(SOURCES
+    src/main.cpp
+    src/Campaign.cpp
+    src/Graphics/EntityStats.cpp
+    src/Graphics/Gadget.cpp
+    src/Graphics/SpriteSheet.cpp
+    src/Graphics/GameWindow.cpp
+    src/Entities/Entity.cpp
+    src/Entities/Tag.cpp
+    
+    src/World/Tilemap.cpp
+    src/World/TileSet.cpp
+    src/World/World.cpp
+    
+    src/Events/EventManager.cpp
+    src/Items/Item.cpp
+    src/Util/Random.cpp
 )
 
-target_link_libraries(RoseRPG
+# Manually list header files
+set(HEADERS
+    src/Campaign.h
+    src/Graphics/Gadget.h
+    src/Graphics/GameWindow.h
+    src/Graphics/SpriteSheet.h
+    src/Entities/Entity.h
+    src/Entities/Tag.h
+    src/Events/Event.h
+    src/Events/EventManager.h
+    src/Items/Item.h
+    src/Util/Random.h
+    src/World/BSP.h
+    src/World/DungeonGenerator.h
+    src/World/Tilemap.h
+    src/World/TileType.h
+    src/World/World.h
+    src/AppConfig.h
+    src/Menu/Menu.h
+)
+
+add_executable(RoseRPG ${SOURCES} ${HEADERS})
+
+target_link_libraries(RoseRPG 
     raylib
 )
 
@@ -40,5 +74,5 @@ target_include_directories(RoseRPG PUBLIC "${raylib_SOURCE_DIR}/src")
 add_custom_command(
     TARGET RoseRPG POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-    "${CMAKE_SOURCE_DIR}/resources" "$<TARGET_FILE_DIR:RoseRPG>/resources"
+    "${CMAKE_SOURCE_DIR}/campaigns" "$<TARGET_FILE_DIR:RoseRPG>/campaigns"
 )

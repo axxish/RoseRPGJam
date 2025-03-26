@@ -1,6 +1,6 @@
 #pragma once
 #include "../Entities/Entity.h"
-#include "../Entities/Rat.h"
+
 #include "../Events/EventManager.h"
 #include "../Graphics/GameWindow.h"
 #include "Tilemap.h"

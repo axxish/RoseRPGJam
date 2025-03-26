@@ -10,27 +10,7 @@ void World::GenerateRat()
 {
     std::pair<int, int> randi;
     randi = gen1->GetRandomFloorTile();
-    auto rat = Rat(randi.first, randi.second, this);
-    auto rand2 = rand() % 4;
-    switch (rand2)
-    {
-    case 0:
-        //rat.AddItem(Item("sword", "sword", 1, 3, 0));
-        break;
-    case 1:
-        //rat.AddItem(Item("greatsword", "sword", 2, 5, 0));
-        break;
-    case 2:
-        //rat.AddItem(Item("helm", "helm", 2, 0, 0));
-        break;
-    case 3:
-        //rat.AddItem(Item("shield", "shield", 4, 1, 0));
-        break;
-    default:
 
-        break;
-    }
-    Entities.push_back(new Rat(rat));
 }
 
 void World::Descend()
@@ -49,9 +29,6 @@ void World::Descend()
     rand = gen1->GetRandomFloorTile();
     Entities.push_back(new Door(rand.first, rand.second, this));
 
-    for(int i = 0; i < 4; i++){
-        GenerateRat();
-    }
 
     rand = gen1->GetRandomFloorTile();
     Entities.push_back(new Heal(rand.first, rand.second, this));

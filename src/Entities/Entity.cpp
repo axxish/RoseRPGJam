@@ -86,35 +86,23 @@ void Entity::DropItem(int num)
 
 void Entity::CalculateDerivedStats()
 {
-    int oldMaxHP = MaxHP;
-    MaxHP = Vigour * 10;
-
-    Damage = Wrath * 2;
-
-    // Adjust current health/mana proportionally to the new max values
-    CurrentHP = std::min(MaxHP, CurrentHP * MaxHP / oldMaxHP);
+ 
 }
 void Entity::GainXP(int amount)
 {
-    XP += amount;
-    while (XP >= GetXPForNextLevel())
-    {
-        LvlUp();
-    }
+    
 }
 
 void Entity::LvlUp()
 {
-    Lvl++;
-    Vigour++;  // Example level-up bonuses
-    Wrath++;
+
 
     CalculateDerivedStats();  // Recalculate derived stats after leveling up
 }
 
 int Entity::GetXPForNextLevel() const
 {
-    return Lvl * 100;
+    return 0;
 }
 
 Entity *Entity::IsOccupied(int x, int y)
@@ -145,21 +133,14 @@ void Entity::Attack(Entity *target)
             std::cout << "target dead\n";
             this->GainXP(target->XpBounty);
             std::cout << this->XP << " " << this->GetXPForNextLevel();
-            this->XpBounty += target->XpBounty;
+            
         }
     }
 }
 
 void Entity::ReceiveDamage(int dmg)
 {
-    int CurrentHP = tags["HP"].get<CappedValue<int>>().get();
-    std::cout << tags["HP"].get<CappedValue<int>>().get();
-    CurrentHP -= dmg;
-    tags["HP"].value = CappedValue<int>(CurrentHP, tags["HP"].get<CappedValue<int>>().getMax());
-    if (CurrentHP <= 0)
-    {
-        Die();
-    }
+ 
 }
 
 void Entity::AttemptMove(int dx, int dy)
@@ -196,20 +177,11 @@ void Entity::AttemptMove(int dx, int dy)
             // WorldRef->Descend();
             return;
         }
-        if (possibleOccupant->isHeal == true && !this->isDead && this->isPlayer == true)
-        {
-            WorldRef->Entities[0]->CurrentHP = WorldRef->Entities[0]->MaxHP;
-            possibleOccupant->Die();
-        }
         if (possibleOccupant->isSolid == false)
         {
             Move(newX, newY);
         }
-        if (possibleOccupant->isMob == true)
-        {
-            Attack(possibleOccupant);
-            return;
-        }
+       
         return;
     }
 
@@ -218,10 +190,9 @@ void Entity::AttemptMove(int dx, int dy)
 
 void Entity::Die()
 {
-    isMob = false;
+   
     isDead = true;
-    isSolid = false;
-    DropItem(0);
+    
 }
 
 bool Player::DoTurn()
@@ -271,22 +242,7 @@ bool Player::DoTurn()
     }
     if (IsKeyPressed(KEY_E))
     {
-        /*
-        for (int i = 0; i < WorldRef->Drops.size(); i++)
-        {
-            auto drop = WorldRef->Drops[i];
-            if (drop.X == X && drop.Y == Y)
-            {
-                if (Inventory.size() < inv_size)
-                {
-                    AddItem(drop.item);
-
-                    WorldRef->Drops.erase(WorldRef->Drops.begin() + i);
-                    return true;
-                }
-            }
-        }
-        */
+   
         for (auto entity : Entities)
         {
             if (entity->isDoor == true && entity->X == X && entity->Y == Y)
@@ -296,9 +252,7 @@ bool Player::DoTurn()
                 return true;
             }
         }
-        // AttemptMove(1, 0);
-        //  Camera->target = {(float)X * 16 * 3, (float)Y * 16 * 3};
-        // EventManager::Instance().Publish(i);
+   
         return true;
     }
 

@@ -5,7 +5,7 @@
 
 struct AppConfig
 {
-    std::string name = "RoseRPG";
+    std::string name = "Campaign Name";
     uint16_t width = 800;
     uint16_t height = 600;
     uint16_t tileSize = 16;
@@ -15,4 +15,7 @@ struct AppConfig
     float gameToRightMenuRatio = 0.65f;
     float gameToBottomMenuRatio = 0.8f;
     float statsToInventoryRatio = 0.5f;
+
+    
+
 };

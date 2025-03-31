@@ -1,16 +1,15 @@
 #include "World.h"
-#include "DungeonGenerator.h"
+
 #include <iostream>
 
-World::World()
-{
-}
+#include "DungeonGenerator.h"
+
+World::World() {}
 
 void World::GenerateRat()
 {
     std::pair<int, int> randi;
     randi = gen1->GetRandomFloorTile();
-
 }
 
 void World::Descend()
@@ -29,20 +28,19 @@ void World::Descend()
     rand = gen1->GetRandomFloorTile();
     Entities.push_back(new Door(rand.first, rand.second, this));
 
-
     rand = gen1->GetRandomFloorTile();
     Entities.push_back(new Heal(rand.first, rand.second, this));
 }
 
-void World::Init(uint16_t worldWidth, uint16_t worldHeight, TileSet *worldTileSet, std::shared_ptr<SpriteSheet> spriteSheet)
+void World::Init(uint16_t worldWidth, uint16_t worldHeight, std::shared_ptr<TileSet> worldTileSet,
+                 std::shared_ptr<SpriteSheet> spriteSheet)
 {
-
     p_width = worldWidth;
     p_height = worldHeight;
     depth = 0;
     p_worldTileSet = worldTileSet;
     p_spriteSheet = spriteSheet;
- 
+
     // p_currentLevel = Tilemap(worldWidth, worldHeight);
     // p_currentLevel.tiles = testWorld;
 
@@ -54,10 +52,10 @@ void World::Init(uint16_t worldWidth, uint16_t worldHeight, TileSet *worldTileSe
     rand = gen1->GetRandomFloorTile();
 
     Entities.push_back(new Player("player", rand.first, rand.second, this));
-    EventManager::Instance().Subscribe(EventType::PlayerMove,
-                                       [this](std::shared_ptr<Event>) { this->OnMoveCameraToPlayer(); });
-    
-   Descend();
+    EventManager::Instance().Subscribe(
+        EventType::PlayerMove, [this](std::shared_ptr<Event>) { this->OnMoveCameraToPlayer(); });
+
+    Descend();
 }
 
 void World::OnMoveCameraToPlayer()
@@ -71,14 +69,12 @@ void World::OnDescend()
     OnMoveCameraToPlayer();
 }
 
-
 void World::AddLootDrop(Item item, int x, int y)
 {
-
-    //Drops.push_back(LootDrop(item, x, y));
+    // Drops.push_back(LootDrop(item, x, y));
 }
 
-TileSet *World::GetTileSet()
+std::shared_ptr<TileSet> World::GetTileSet()
 {
     return p_worldTileSet;
 }
@@ -105,7 +101,8 @@ void World::DrawTilemap(GameWindow &renderer)
             y++;
             x = 0;
         }
-        renderer.DrawSprite(p_worldTileSet->getSpriteSheet(), types[tiles[i]].getTextureName(), x, y);
+        renderer.DrawSprite(*p_worldTileSet->getSpriteSheet(), types[tiles[i]].getTextureName(), x,
+                            y);
     }
 }
 
@@ -142,10 +139,9 @@ void World::DrawAliveEntities(GameWindow &renderer)
 
     for (int z = 1; z < Entities.size(); z++)
     {
-        auto i = Entities[z];   
+        auto i = Entities[z];
         if (i->isMob)
         {
-            
             DrawText(std::to_string(i->Lvl).c_str(), (i->X * 16), (i->Y * 16) - 8, 12, YELLOW);
             DrawText(i->Name.c_str(), (i->X * 16) + 4, (i->Y * 16) - 16, 12, YELLOW);
         }
@@ -168,12 +164,11 @@ void World::EndTurn()
 {
     p_currentEntityIndex++;
     if (p_currentEntityIndex >= Entities.size())
-        StartTurn(); // Cycle back to the beginning of the turn
+        StartTurn();  // Cycle back to the beginning of the turn
 }
 
 void World::OnRender(GameWindow &renderer)
 {
-
     DrawTilemap(renderer);
     DrawDeadEntities(renderer);
     /*for (auto drop : Drops)
@@ -183,11 +178,8 @@ void World::OnRender(GameWindow &renderer)
     DrawAliveEntities(renderer);
 }
 
-
-
 void World::OnUpdate(float deltaTime)
 {
-
     for (Entity *e : Entities)
     {
         e->OnUpdate(deltaTime);

@@ -19,9 +19,6 @@ public:
     //void Render(int x, int y, int scale) override;
 
 private:
-    
-
     std::shared_ptr<AppConfig> p_appConfig;
-   RenderTexture2D p_renderTex;
     
 };

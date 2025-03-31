@@ -15,9 +15,9 @@ class TileSet
 
     void addTileType(const std::string &textureName, Sprite spriteInfo, bool isSolid);
 
-    const SpriteSheet &getSpriteSheet() const
+    std::shared_ptr<SpriteSheet>getSpriteSheet() const
     {
-        return *p_spriteSheet;
+        return p_spriteSheet;
     }
 
     const std::vector<TileType> getTileTypes() const

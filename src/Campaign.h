@@ -12,7 +12,7 @@ class Campaign
     Campaign(AppConfig &config = AppConfig());
     ~Campaign();
 
-    void Run();
+    void Run(const std::string& campaignPath);
     void OnWindowResize();
     void OnUpdate(float deltaTime);
     void OnRender();
@@ -31,7 +31,7 @@ class Campaign
     GameWindow p_gameWindow;
     std::unique_ptr<EntityStatsGadget> p_entityStatsGadget;
 
-    TileSet p_worldTileSet;
+    std::shared_ptr<TileSet> p_worldTileSet;
     std::shared_ptr<SpriteSheet> p_spriteSheet;
 
     World p_world;

@@ -22,7 +22,7 @@ public:
 
 protected:
     std::shared_ptr<AppConfig> p_appConfig;
-    RenderTexture2D p_renderTex;
+    std::shared_ptr<RenderTexture2D> p_renderTex;
     uint16_t p_width;
     uint16_t p_height;
     uint16_t p_x;

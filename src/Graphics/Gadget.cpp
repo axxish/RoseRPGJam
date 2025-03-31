@@ -4,19 +4,20 @@
 Gadget::Gadget(float normalizedX, float normalizedY, float normalizedWidth, float normalizedHeight, std::shared_ptr<AppConfig> appConfig)
     : p_normalizedX(normalizedX), p_normalizedY(normalizedY), p_normalizedWidth(normalizedWidth), p_normalizedHeight(normalizedHeight), p_appConfig(appConfig)
 {
+    p_renderTex = std::make_shared<RenderTexture2D>();
 }
 
 void Gadget::Init()
 {
+    *p_renderTex = LoadRenderTexture(p_width, p_height);
     UpdateDimensions();
-    p_renderTex = LoadRenderTexture(p_width, p_height);
 }
 
 void Gadget::Render(int scale)
 {
     DrawTexturePro(
-        p_renderTex.texture, {(float)p_x, (float)p_y, (float)p_renderTex.texture.width, (float)-p_renderTex.texture.height},
-        {(float)0, (float)0, (float)p_renderTex.texture.width * scale, (float)p_renderTex.texture.height * scale},
+        p_renderTex->texture, {(float)p_x, (float)p_y, (float)p_renderTex->texture.width, (float)-p_renderTex->texture.height},
+        {(float)0, (float)0, (float)p_renderTex->texture.width * scale, (float)p_renderTex->texture.height * scale},
         {0, 0}, 0, WHITE);
     DrawBorder(WHITE, 2);
     
@@ -29,7 +30,7 @@ void Gadget::DrawBorder(Color color, int thickness)
 
 Gadget::~Gadget()
 {
-    UnloadRenderTexture(p_renderTex);
+    UnloadRenderTexture(*p_renderTex);
 }
 
 void Gadget::OnWindowResize()
@@ -37,8 +38,8 @@ void Gadget::OnWindowResize()
 
     UpdateDimensions();
     std::cout<<"Gadget::OnWindowResize() "<< p_width<<" "<<p_height<<" " << p_x<<" "<<p_y<<"\n";
-    UnloadRenderTexture(p_renderTex);
-    p_renderTex = LoadRenderTexture(p_width, p_height);
+    UnloadRenderTexture(*p_renderTex);
+    *p_renderTex = LoadRenderTexture(p_width, p_height);
 }
 
 void Gadget::UpdateDimensions()
@@ -53,12 +54,12 @@ void Gadget::UpdateDimensions()
 
 uint32_t Gadget::GetWidthInPixels() const
 {
-    return p_renderTex.texture.width;
+    return p_renderTex->texture.width;
 }
 
 uint32_t Gadget::GetHeightInPixels() const
 {
-    return p_renderTex.texture.height;
+    return p_renderTex->texture.height;
 }
 
 uint32_t Gadget::GetXInPixels() const

@@ -8,17 +8,18 @@ EntityStatsGadget::EntityStatsGadget(float normalizedX, float normalizedY, float
       p_appConfig(appConfig)
 {
     UpdateDimensions();
-    p_renderTex = LoadRenderTexture(p_width, p_height);
+    
+
 }
 
 EntityStatsGadget::~EntityStatsGadget()
 {
-    UnloadRenderTexture(p_renderTex);
+
 }
 
 void EntityStatsGadget::DrawStats(const Entity& entity)
 {
-    BeginTextureMode(p_renderTex);
+    BeginTextureMode(*p_renderTex);
     ClearBackground(BLACK);  // Clear the background to black
 
     int yOffset = 20;
@@ -63,7 +64,8 @@ void EntityStatsGadget::DrawStats(const Entity& entity)
 
 void EntityStatsGadget::Init()
 {
-    p_renderTex = LoadRenderTexture(p_width, p_height);
+    *p_renderTex =LoadRenderTexture(p_width, p_height);
+    
 }
 
 void EntityStatsGadget::UpdateDimensions()
@@ -77,17 +79,17 @@ void EntityStatsGadget::UpdateDimensions()
 void EntityStatsGadget::OnWindowResize()
 {
     UpdateDimensions();
-    UnloadRenderTexture(p_renderTex);
-    p_renderTex = LoadRenderTexture(p_width, p_height);
+    UnloadRenderTexture(*p_renderTex);
+    *p_renderTex = LoadRenderTexture(p_width, p_height);
 }
 
 void EntityStatsGadget::Render(int scale)
 {
     DrawTexturePro(
-        p_renderTex.texture,
-        {(float)0, (float)0, (float)p_renderTex.texture.width, (float)-p_renderTex.texture.height},
-        {(float)p_x, (float)p_y, (float)p_renderTex.texture.width * scale,
-         (float)p_renderTex.texture.height * scale},
+        p_renderTex->texture,
+        {(float)0, (float)0, (float)p_renderTex->texture.width, (float)-p_renderTex->texture.height},
+        {(float)p_x, (float)p_y, (float)p_renderTex->texture.width * scale,
+         (float)p_renderTex->texture.height * scale},
         {0, 0}, 0, WHITE);
     DrawBorder(WHITE, 2);
 }

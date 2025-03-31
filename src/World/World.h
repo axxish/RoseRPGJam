@@ -24,7 +24,7 @@ class World
     void OnRender(GameWindow &renderer);
 
     void DrawTilemap(GameWindow &renderer);
-    TileSet *GetTileSet();
+    std::shared_ptr<TileSet> GetTileSet();
     Tilemap *GetTilemap();
 
     void DrawAliveEntities(GameWindow &renderer);
@@ -40,7 +40,7 @@ class World
 
     void EndTurn();
 
-    void Init(uint16_t worldWidth, uint16_t worldHeight, TileSet *worldTileSet, std::shared_ptr<SpriteSheet> spriteSheet);
+    void Init(uint16_t worldWidth, uint16_t worldHeight, std::shared_ptr<TileSet> worldTileSet, std::shared_ptr<SpriteSheet> spriteSheet);
 
     void Descend();
 
@@ -78,7 +78,7 @@ class World
     Tilemap p_currentLevel;
 
     std::shared_ptr<SpriteSheet> p_spriteSheet;
-    TileSet *p_worldTileSet;
+    std::shared_ptr<TileSet> p_worldTileSet;
     
 
     std::shared_ptr<DungeonGenerator> gen1;

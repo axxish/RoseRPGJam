@@ -9,7 +9,7 @@ class World;
 struct Entity
 {
 
-    Entity(const std::string &name, const std::string &spriteName, int vigour, int wrath, int x, int y,
+    Entity(const std::string &name, const std::string &spriteName, int x, int y,
            World *worldRef);
     virtual bool DoTurn()
     {
@@ -41,23 +41,10 @@ struct Entity
     std::string Name;
     std::string SpriteName;
 
-    /*std::vector<Item> Inventory;
-    const static int inv_size = 4;
-    */
-    int Lvl;
-    int XP;
-    int XpBounty;
-
     // attributes everything else scales off
     
     std::unordered_map<std::string, TagValue> tags;
 
-    int Vigour;  // hp
-    int Wrath;   // dmg
-
-    int MaxHP;
-    int CurrentHP;
-    int Damage;
     int X;
     int Y;
 
@@ -78,7 +65,7 @@ struct Entity
 
 struct Player : public Entity
 {
-    Player(const std::string &name, int x, int y, World *worldRef) : Entity(name, "hero", 4, 5, x, y, worldRef)
+    Player(const std::string &name, int x, int y, World *worldRef) : Entity(name, "hero", x, y, worldRef)
     {
         isPlayer = true;    
         
@@ -91,24 +78,12 @@ struct Player : public Entity
 
 struct Door : public Entity
 {
-    Door(int x, int y, World *worldRef) : Entity("Door", "door", 4, 5, x, y, worldRef)
+    Door(int x, int y, World *worldRef) : Entity("Door", "door", x, y, worldRef)
     {
         isMob = false;
         isSolid = false;
         isDead = false;
         isDoor = true;
-    }
-};
-
-struct Heal : public Entity
-{
-    Heal(int x, int y, World *worldRef) : Entity("heal", "heal", 4, 5, x, y, worldRef)
-    {
-        isMob = false;
-        isSolid = false;
-        isDead = false;
-        isDoor = false;
-        isHeal = true;
     }
 };
 

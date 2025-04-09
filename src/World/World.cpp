@@ -28,8 +28,6 @@ void World::Descend()
     rand = gen1->GetRandomFloorTile();
     Entities.push_back(new Door(rand.first, rand.second, this));
 
-    rand = gen1->GetRandomFloorTile();
-    Entities.push_back(new Heal(rand.first, rand.second, this));
 }
 
 void World::Init(uint16_t worldWidth, uint16_t worldHeight, std::shared_ptr<TileSet> worldTileSet,
@@ -40,9 +38,6 @@ void World::Init(uint16_t worldWidth, uint16_t worldHeight, std::shared_ptr<Tile
     depth = 0;
     p_worldTileSet = worldTileSet;
     p_spriteSheet = spriteSheet;
-
-    // p_currentLevel = Tilemap(worldWidth, worldHeight);
-    // p_currentLevel.tiles = testWorld;
 
     gen1 = std::make_shared<DungeonGenerator>(worldHeight, worldWidth);
     gen1->Generate(4, 8);
@@ -71,7 +66,7 @@ void World::OnDescend()
 
 void World::AddLootDrop(Item item, int x, int y)
 {
-    // Drops.push_back(LootDrop(item, x, y));
+   
 }
 
 std::shared_ptr<TileSet> World::GetTileSet()
@@ -140,11 +135,6 @@ void World::DrawAliveEntities(GameWindow &renderer)
     for (int z = 1; z < Entities.size(); z++)
     {
         auto i = Entities[z];
-        if (i->isMob)
-        {
-            DrawText(std::to_string(i->Lvl).c_str(), (i->X * 16), (i->Y * 16) - 8, 12, YELLOW);
-            DrawText(i->Name.c_str(), (i->X * 16) + 4, (i->Y * 16) - 16, 12, YELLOW);
-        }
     }
 }
 

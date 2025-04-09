@@ -29,11 +29,9 @@ set(SOURCES
     src/Graphics/GameWindow.cpp
     src/Entities/Entity.cpp
     src/Entities/Tag.cpp
-    
     src/World/Tilemap.cpp
     src/World/TileSet.cpp
     src/World/World.cpp
-    
     src/Events/EventManager.cpp
     src/Items/Item.cpp
     src/Util/Random.cpp

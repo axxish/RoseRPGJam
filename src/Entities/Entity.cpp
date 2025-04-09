@@ -5,9 +5,9 @@
 #include <random>
 
 #include "../World/World.h"
-Entity::Entity(const std::string &name, const std::string &spriteName, int vigour, int wrath,
+Entity::Entity(const std::string &name, const std::string &spriteName,
                int x, int y, World *worldRef)
-    : Vigour(vigour), Wrath(wrath)
+    
 {
     // Inventory.reserve(4);
     Name = name;
@@ -15,12 +15,8 @@ Entity::Entity(const std::string &name, const std::string &spriteName, int vigou
     X = x;
     Y = y;
     WorldRef = worldRef;
-    Lvl = 1;
-    XP = 0;
-    XpBounty = 30;
     CalculateDerivedStats();
-    CurrentHP = MaxHP;
-
+  
     tags["XP"] = TagValue(0);
     tags["XP"].makeDisplayable();
     tags["Lvl"] = TagValue(1);
@@ -125,17 +121,7 @@ void Entity::Move(int x, int y)
 
 void Entity::Attack(Entity *target)
 {
-    if (target->isDead == false)
-    {
-        target->ReceiveDamage(Damage);
-        if (target->isDead)
-        {
-            std::cout << "target dead\n";
-            this->GainXP(target->XpBounty);
-            std::cout << this->XP << " " << this->GetXPForNextLevel();
-            
-        }
-    }
+   
 }
 
 void Entity::ReceiveDamage(int dmg)

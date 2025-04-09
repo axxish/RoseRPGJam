@@ -72,8 +72,6 @@ void Campaign::Run(const std::string &campaignPath)
     
     p_world.Init(20, 20, p_worldTileSet, p_spriteSheet);
 
-    currentItemInv = 0;
-
     p_gameWindow = GameWindow(p_appConfig.gameToRightMenuRatio, p_appConfig.gameToBottomMenuRatio,
                               std::make_shared<AppConfig>(p_appConfig));
 
@@ -155,31 +153,7 @@ void Campaign::OnUpdate(float deltaTime)
     {
         p_world.Descend();
     }
-    if (IsKeyPressed(KEY_I) && p_world.GetIsItPlayerMove())
-    {
-        inventoryOpen = !inventoryOpen;
-    }
-    if (!inventoryOpen)
+   
         p_world.OnUpdate(deltaTime);
-    else
-    {
-        if (IsKeyPressed(KEY_S))
-        {
-            currentItemInv++;
-        }
-        if (IsKeyPressed(KEY_W))
-        {
-            currentItemInv--;
-        }
-        if (IsKeyPressed(KEY_Q))
-        {
-            /*
-            if (currentItemInv < p_world.Entities[0]->Inventory.size())
-            {
-                p_world.Entities[0]->DropItem(currentItemInv);
-                inventoryOpen = false;
-            }*/
-        }
-        currentItemInv = currentItemInv % 4;
-    }
+    
 }

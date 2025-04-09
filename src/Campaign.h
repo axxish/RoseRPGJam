@@ -23,10 +23,7 @@ class Campaign
     void Loop();
 
     bool worldRunning = true;
-		
-		uint16_t currentItemInv;
-		bool inventoryOpen = false;
-
+	
     AppConfig& p_appConfig;
     GameWindow p_gameWindow;
     std::unique_ptr<EntityStatsGadget> p_entityStatsGadget;

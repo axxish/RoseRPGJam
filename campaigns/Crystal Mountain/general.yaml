@@ -1,0 +1,7 @@
+Campaign:
+  Name: Crystal Mountain
+  Author: axxy
+  Description: "Inside crystal mountain evil takes its form. Inside crystal mountain commandments are reborn."
+  Version: 0.1
+  StartingMap: crypts
+  StartingPlayerDef: player_crusader

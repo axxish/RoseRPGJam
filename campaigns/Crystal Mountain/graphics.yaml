@@ -1,0 +1,110 @@
+# Define spritesheets
+spritesheets:
+  creatures:
+    file_path: "resources/creatures.png"
+    resolution: 16
+  items:
+    file_path: "resources/items.png"
+    resolution: 16
+  maptiles:
+    file_path: "resources/maptiles.png"
+    resolution: 16
+
+# Define sprites
+sprites:
+  #entities
+  player_male:
+    spritesheet: creatures
+    coordinate: "1x3"
+    size: "1x1"
+  rat:
+    spritesheet: creatures
+    coordinate: "2x2"
+    size: "1x1"
+  naked_goblin:
+    spritesheet: creatures
+    coordinate: "1x3"
+    size: "1x1"
+  coward_goblin:
+    spritesheet: creatures
+    coordinate: "2x3"
+    size: "1x1"
+  #items
+  armored_goblin:
+    spritesheet: creatures
+    coordinate: "4x3"
+    size: "1x1"
+  basic_sword:
+    spritesheet: items
+    coordinate: "2x8"
+    size: "1x1"
+  claymore:
+    spritesheet: items
+    coordinate: "3x8"
+    size: "1x1"
+  great_sword:
+    spritesheet: items
+    coordinate: "4x8"
+    size: "1x1"
+  big_axe:
+    spritesheet: items
+    coordinate: "5x8"
+    size: "1x1"
+  basic_helm:
+    spritesheet: items
+    coordinate: "1x10"
+    size: "1x1"
+  dwarf_helm:
+    spritesheet: items
+    coordinate: "3x10"
+    size: "1x1"
+  knight_helm:
+    spritesheet: items
+    coordinate: "6x10"
+    size: "1x1"
+  epic_helm:
+    spritesheet: items
+    coordinate: "5x11"
+    size: "1x1"
+  base_armor:
+    spritesheet: items
+    coordinate: "10x10"
+    size: "1x1"
+  basic_staff:
+    spritesheet: items
+    coordinate: "1x12"
+    size: "1x1"
+  brown_boots:
+    spritesheet: items
+    coordinate: "6x11"
+    size: "1x1"
+  #consumables
+  health_potion:
+    spritesheet: items
+    coordinate: "12x5"
+    size: "1x1"
+  #walls and stuff
+  floor_tile1:
+    spritesheet: maptiles
+    coordinate: "3x3"
+    size: "1x1"
+  wall_tile1:
+    spritesheet: maptiles
+    coordinate: "2x2"
+    size: "1x1"
+  chair_w:
+    spritesheet: maptiles
+    coordinate: "6x1"
+    size: "1x1"
+  alchemy_table:
+    spritesheet: maptiles
+    coordinate: "6x9"
+    size: "1x1"
+  alchemy_table:
+    spritesheet: maptiles
+    coordinate: "6x9"
+    size: "1x1"
+  book_shelf:
+    spritesheet: maptiles
+    coordinate: "6x8"
+    size: "1x1"

@@ -1,0 +1,76 @@
+# Entities for the Crystal Mountain campaign
+entities:
+  player_crusader:
+    name: "Crusader"
+    description: "A brave warrior of light."
+    base_stats:
+      STRENGTH: 10
+      DEXTERITY: 5
+      INSIGHT: 3
+      LUCK: 2
+      XP: 0
+      LEVEL: 1
+    walkable: false
+    sprite: player_male
+  rat:
+    name: "Rat"
+    description: "A small but vicious rodent."
+    base_stats:
+      STRENGTH: 1
+      DEXTERITY: 2
+      INSIGHT: 1
+      LUCK: 1
+      XP: 5
+      LEVEL: 1
+    walkable: false
+    sprite: rat
+  naked_goblin:
+    name: "Naked Goblin"
+    description: "A weak goblin without armor."
+    base_stats:
+      STRENGTH: 3
+      DEXTERITY: 2
+      INSIGHT: 1
+      LUCK: 1
+      XP: 10
+      LEVEL: 1
+    walkable: false
+    sprite: naked_goblin
+  coward_goblin:
+    name: "Coward Goblin"
+    description: "A goblin that prefers to flee."
+    base_stats:
+      STRENGTH: 4
+      DEXTERITY: 3
+      INSIGHT: 2
+      LUCK: 2
+    walkable: false
+    sprite: coward_goblin
+  armored_goblin:
+    name: "Armored Goblin"
+    description: "A goblin with heavy armor."
+    base_stats:
+      STRENGTH: 6
+      DEXTERITY: 4
+      INSIGHT: 2
+      LUCK: 1
+    walkable: false
+    sprite: armored_goblin
+  chair:
+    name: "Wooden Chair"
+    description: "A simple wooden chair."
+    walkable: true
+    sprite: chair_w
+    ai: none
+  alchemy_table:
+    name: "Alchemy Table"
+    description: "A table used for alchemical experiments."
+    walkable: true
+    sprite: alchemy_table
+    ai: none
+  book_shelf:
+    name: "Book Shelf"
+    description: "A shelf filled with books."
+    walkable: true
+    sprite: book_shelf
+    ai: none

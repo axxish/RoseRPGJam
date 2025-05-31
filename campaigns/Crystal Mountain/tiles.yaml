@@ -1,0 +1,10 @@
+# Tiles for the Crystal Mountain campaign
+tiles:
+  floor_tile1:
+    name: "Floor Tile"
+    walkable: true
+    sprite: floor_tile1
+  wall_tile1:
+    name: "Wall Tile"
+    walkable: false
+    sprite: wall_tile1
